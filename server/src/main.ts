@@ -19,6 +19,7 @@ async function bootstrap() {
     .setTitle('Bariendo appointment API')
     .setDescription('The Bariendo appointment API description')
     .setVersion('1.0')
+    .addBearerAuth()
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup(httPrefix + '/swagger', app, document);

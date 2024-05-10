@@ -8,8 +8,10 @@ import {
   ParseIntPipe,
   Post,
   Query,
+  UseGuards,
 } from '@nestjs/common';
 import {
+  ApiBearerAuth,
   ApiCreatedResponse,
   ApiInternalServerErrorResponse,
   ApiNotFoundResponse,
@@ -21,9 +23,12 @@ import { AppointmentEntity } from './entities/appointment.entity';
 import { CreateAppointmentDto } from './dto/create-appointment.dto';
 import { GetAppointmentsQuery } from './dto/get-appointment.dto';
 import { ApiOkResponsePaginated } from 'src/shared/dto/ok-paginated.dto';
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 
 @Controller('appointments')
 @ApiTags('appointments')
+@UseGuards(JwtAuthGuard)
+@ApiBearerAuth()
 export class AppointmentController {
   private readonly appointmentService: AppointmentService;
   constructor(appointmentService: AppointmentService) {

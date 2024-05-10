@@ -5,15 +5,18 @@ import {
   HttpStatus,
   Param,
   ParseIntPipe,
+  UseGuards,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import {
+  ApiBearerAuth,
   ApiInternalServerErrorResponse,
   ApiNotFoundResponse,
   ApiOkResponse,
   ApiTags,
 } from '@nestjs/swagger';
 import { UserEntity } from './entities/user.entity';
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 
 @Controller('users')
 @ApiTags('users')
@@ -23,6 +26,8 @@ export class UserController {
     this.userService = userService;
   }
 
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
   @Get()
   @ApiOkResponse({ description: 'Users list', type: [UserEntity] })
   @ApiInternalServerErrorResponse({ description: 'Internal server error' })
@@ -30,6 +35,8 @@ export class UserController {
     return this.userService.getUsers();
   }
 
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
   @Get(':id')
   @ApiOkResponse({ description: 'Users list', type: UserEntity })
   @ApiNotFoundResponse({ description: 'User not found' })

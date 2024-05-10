@@ -13,14 +13,16 @@ import { PrismaService } from './prisma/prisma.service';
 import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
 import { CacheModule } from '@nestjs/cache-manager';
+import { JwtStrategy } from './auth/jwt.strategy';
 
 @Module({
   imports: [
     ConfigModule.forRoot(),
-    PassportModule,
+    PassportModule.register({ defaultStrategy: 'jwt', global: true }),
     JwtModule.register({
       secret: process.env.ACCESS_TOKEN_SECRET,
       signOptions: { expiresIn: process.env.ACCESS_TOKEN_EXPIRATION }, // e.g. 30s, 7d, 24h
+      global: true,
     }),
     CacheModule.register(),
   ],
@@ -37,6 +39,7 @@ import { CacheModule } from '@nestjs/cache-manager';
     OrgService,
     AppointmentService,
     PrismaService,
+    JwtStrategy,
   ],
 })
 export class AppModule {}
