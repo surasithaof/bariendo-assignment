@@ -5,12 +5,16 @@ import { AuthEntity } from './entities/auth.entity';
 import { UserService } from 'src/user/user.service';
 import { generateSalt, hashPassword } from 'src/utils/cryptography';
 import { OrgService } from 'src/org/org.service';
+import { JwtService } from '@nestjs/jwt';
+import { UserEntity } from 'src/user/entities/user.entity';
+import { v4 as uuid } from 'uuid';
 
 @Injectable()
 export class AuthService {
   constructor(
     private userService: UserService,
     private orgService: OrgService,
+    private jwtService: JwtService,
   ) {}
 
   async signUp(createUserDto: SignUpDto): Promise<AuthEntity> {
@@ -58,11 +62,17 @@ export class AuthService {
       });
     }
 
-    // todo: generate token.
+    const { accessToken, expiresIn } = this.generateAccessToken(newUser);
+    const refreshToken = this.generateRefreshToken(newUser);
 
     // todo: cash token.
 
-    return new AuthEntity();
+    return {
+      accessToken,
+      refreshToken,
+      expiresIn,
+      user: newUser,
+    };
   }
 
   async signIn(signInDto: SignInDto): Promise<AuthEntity> {
@@ -76,11 +86,17 @@ export class AuthService {
       throw new HttpException('Invalid email or password', 400);
     }
 
-    // todo: generate token.
+    const { accessToken, expiresIn } = this.generateAccessToken(user);
+    const refreshToken = this.generateRefreshToken(user);
 
     // todo: cash token.
 
-    return new AuthEntity();
+    return {
+      accessToken,
+      refreshToken,
+      expiresIn,
+      user: user,
+    };
   }
 
   async refreshToken(refreshToken: string): Promise<AuthEntity> {
@@ -97,5 +113,38 @@ export class AuthService {
     // todo: remove token from cache.
 
     console.log(refreshToken);
+  }
+
+  generateAccessToken(user: UserEntity): {
+    accessToken: string;
+    expiresIn: number;
+  } {
+    const accessToken = this.jwtService.sign(
+      {
+        userId: user.id,
+        role: user.role,
+        email: user.email,
+        organizationId: user.organizationId,
+      },
+      {
+        secret: process.env.ACCESS_TOKEN_SECRET,
+        expiresIn: process.env.ACCESS_TOKEN_EXPIRATION,
+      },
+    );
+    return {
+      accessToken,
+      expiresIn: parseInt(process.env.ACCESS_TOKEN_EXPIRATION),
+    };
+  }
+
+  generateRefreshToken(user: UserEntity) {
+    const tokenId = uuid();
+    return this.jwtService.sign(
+      { userId: user.id, tokenId },
+      {
+        secret: process.env.REFRESH_TOKEN_SECRET,
+        expiresIn: process.env.REFRESH_TOKEN_EXPIRATION,
+      },
+    );
   }
 }

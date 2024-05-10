@@ -10,9 +10,18 @@ import { OrgService } from './org/org.service';
 import { AppointmentController } from './appointment/appointment.controller';
 import { AppointmentService } from './appointment/appointment.service';
 import { PrismaService } from './prisma/prisma.service';
+import { PassportModule } from '@nestjs/passport';
+import { JwtModule } from '@nestjs/jwt';
 
 @Module({
-  imports: [ConfigModule.forRoot()],
+  imports: [
+    ConfigModule.forRoot(),
+    PassportModule,
+    JwtModule.register({
+      secret: process.env.ACCESS_TOKEN_SECRET,
+      signOptions: { expiresIn: process.env.ACCESS_TOKEN_EXPIRATION }, // e.g. 30s, 7d, 24h
+    }),
+  ],
   controllers: [
     HealthController,
     UserController,
