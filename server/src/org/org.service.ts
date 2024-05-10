@@ -9,4 +9,12 @@ export class OrgService {
   async getOrgs(): Promise<OrgEntity[]> {
     return this.prisma.organization.findMany();
   }
+
+  async getOrgById(id: number): Promise<OrgEntity> {
+    return this.prisma.organization.findUnique({
+      where: {
+        id: id,
+      },
+    });
+  }
 }

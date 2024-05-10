@@ -63,7 +63,7 @@ CREATE TABLE "appointments" (
 );
 
 -- CreateIndex
-CREATE UNIQUE INDEX "users_email_organization_id_key" ON "users"("email", "organization_id");
+CREATE UNIQUE INDEX "users_email_key" ON "users"("email");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "patients_user_id_key" ON "patients"("user_id");

@@ -16,7 +16,7 @@ datasource db {
 
 model User {
   id    Int     @default(autoincrement()) @id
-  email String
+  email String  @unique
   salt  String
   password String
   role  Role    @default(Patient)
@@ -28,7 +28,6 @@ model User {
   doctor Doctor?
 
    @@map("users")
-   @@unique([email, organizationId], name: "unique_user_organization")
 }
 
 enum Role {

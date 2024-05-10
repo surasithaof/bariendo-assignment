@@ -15,25 +15,25 @@ export class AuthController {
 
   @Post('/sign-up')
   @ApiOkResponse({ description: 'User signed up', type: AuthEntity })
-  signUp(@Body() createUserDto: SignUpDto) {
+  async signUp(@Body() createUserDto: SignUpDto) {
     return this.authService.signUp(createUserDto);
   }
 
   @Post('/sign-in')
   @ApiOkResponse({ description: 'User signed in', type: AuthEntity })
-  signIn(@Body() signInDto: SignInDto) {
+  async signIn(@Body() signInDto: SignInDto) {
     return this.authService.signIn(signInDto);
   }
 
   @Post('refresh-token')
   @ApiOkResponse({ description: 'Refresh token', type: AuthEntity })
-  refreshToken(@Body() refreshToken: string) {
+  async refreshToken(@Body() refreshToken: string) {
     return this.authService.refreshToken(refreshToken);
   }
 
   @Delete('sign-out')
   @ApiNoContentResponse({ description: 'User signed out' })
-  signOut(@Body() refreshToken: string) {
+  async signOut(@Body() refreshToken: string) {
     this.authService.signOut(refreshToken);
   }
 }
