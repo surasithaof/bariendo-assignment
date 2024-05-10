@@ -18,6 +18,7 @@ CREATE TABLE "users" (
 -- CreateTable
 CREATE TABLE "patients" (
     "id" SERIAL NOT NULL,
+    "name" TEXT NOT NULL,
     "user_id" INTEGER NOT NULL,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3) NOT NULL,
@@ -29,6 +30,7 @@ CREATE TABLE "patients" (
 -- CreateTable
 CREATE TABLE "doctors" (
     "id" SERIAL NOT NULL,
+    "name" TEXT NOT NULL,
     "user_id" INTEGER NOT NULL,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3) NOT NULL,
@@ -61,7 +63,7 @@ CREATE TABLE "appointments" (
 );
 
 -- CreateIndex
-CREATE UNIQUE INDEX "users_email_key" ON "users"("email");
+CREATE UNIQUE INDEX "users_email_organization_id_key" ON "users"("email", "organization_id");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "patients_user_id_key" ON "patients"("user_id");

@@ -15,6 +15,20 @@ async function main() {
       role: 'SuperAdmin',
     },
   });
+
+  await prisma.organization.createMany({
+    data: [
+      {
+        name: 'Org A',
+      },
+      {
+        name: 'Org B',
+      },
+      {
+        name: 'Org C',
+      },
+    ],
+  });
 }
 
 main()

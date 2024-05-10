@@ -1,9 +1,12 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
+import { ValidationPipe } from '@nestjs/common';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+
+  app.useGlobalPipes(new ValidationPipe());
 
   const httPrefix = process.env.HTTP_PREFIX;
   app.setGlobalPrefix(httPrefix);
@@ -12,7 +15,6 @@ async function bootstrap() {
     .setTitle('Bariendo appointment API')
     .setDescription('The Bariendo appointment API description')
     .setVersion('1.0')
-    .addTag('appointment')
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup(httPrefix + '/swagger', app, document);

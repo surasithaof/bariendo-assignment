@@ -16,7 +16,7 @@ datasource db {
 
 model User {
   id    Int     @default(autoincrement()) @id
-  email String  @unique
+  email String
   salt  String
   password String
   role  Role    @default(Patient)
@@ -28,6 +28,7 @@ model User {
   doctor Doctor?
 
    @@map("users")
+   @@unique([email, organizationId], name: "unique_user_organization")
 }
 
 enum Role {
@@ -39,6 +40,7 @@ enum Role {
 
 model Patient {
   id Int @default(autoincrement()) @id
+  name String
   userId Int @map("user_id") @unique
   user User @relation(fields: [userId], references: [id]) 
   createdAt DateTime   @default(now()) @map("created_at")
@@ -52,6 +54,7 @@ model Patient {
 
 model Doctor {
   id Int @default(autoincrement()) @id
+  name String
   userId Int @map("user_id") @unique
   user User @relation(fields: [userId], references: [id])
   createdAt DateTime   @default(now()) @map("created_at")
