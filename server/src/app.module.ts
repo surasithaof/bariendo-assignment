@@ -12,6 +12,7 @@ import { AppointmentService } from './appointment/appointment.service';
 import { PrismaService } from './prisma/prisma.service';
 import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
+import { CacheModule } from '@nestjs/cache-manager';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { JwtModule } from '@nestjs/jwt';
       secret: process.env.ACCESS_TOKEN_SECRET,
       signOptions: { expiresIn: process.env.ACCESS_TOKEN_EXPIRATION }, // e.g. 30s, 7d, 24h
     }),
+    CacheModule.register(),
   ],
   controllers: [
     HealthController,
