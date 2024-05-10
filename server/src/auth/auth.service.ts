@@ -4,8 +4,6 @@ import { SignUpDto } from './dto/sign-up';
 import { AuthEntity } from './entities/auth.entity';
 import { UserService } from 'src/user/user.service';
 
-// TODO: Implement the methods
-
 @Injectable()
 export class AuthService {
   private readonly userService: UserService;

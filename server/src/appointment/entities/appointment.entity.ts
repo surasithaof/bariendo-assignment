@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { Appointments } from '@prisma/client';
 
-// TODO:
-export class AppointmentEntity {
+export class AppointmentEntity implements Appointments {
   @ApiProperty()
   id: number;
 
