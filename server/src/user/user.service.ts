@@ -20,6 +20,11 @@ export class UserService {
       where: {
         id: id,
       },
+      include: {
+        doctor: true,
+        patient: true,
+        organization: true,
+      },
     });
   }
 

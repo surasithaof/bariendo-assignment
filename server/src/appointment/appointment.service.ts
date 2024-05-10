@@ -1,24 +1,77 @@
 import { Injectable } from '@nestjs/common';
 import { AppointmentEntity } from './entities/appointment.entity';
 import { CreateAppointmentDto } from './dto/create-appointment.dto';
+import { PrismaService } from 'src/prisma/prisma.service';
+import { GetAppointmentsQuery } from './dto/get-appointment.dto';
+import { PaginationDto } from 'src/shared/dto/pagination.dto';
 
 @Injectable()
 export class AppointmentService {
-  constructor() {}
+  constructor(private prisma: PrismaService) {}
 
-  async getAppointments(): Promise<AppointmentEntity[]> {
-    return [];
+  async getAppointments(
+    queryParams: GetAppointmentsQuery,
+  ): Promise<PaginationDto<AppointmentEntity>> {
+    const appointments = (await this.prisma.appointments.findMany({
+      where: {
+        organizationId: queryParams.orgId,
+        date: {
+          gte: queryParams.startDate,
+          lte: queryParams.endDate,
+        },
+      },
+      skip: queryParams.skip,
+      take: queryParams.limit,
+      include: {
+        doctor: true,
+        patient: true,
+        organization: true,
+      },
+    })) as [AppointmentEntity];
+
+    const total = await this.prisma.appointments.count({
+      where: {
+        organizationId: queryParams.orgId,
+        date: {
+          gte: queryParams.startDate,
+          lte: queryParams.endDate,
+        },
+      },
+    });
+
+    return {
+      data: appointments,
+      total: total,
+      limit: queryParams.limit,
+      skip: queryParams.skip,
+    };
   }
 
   async getAppointmentById(id: number): Promise<AppointmentEntity> {
-    console.log('id: ', id);
-    return new AppointmentEntity();
+    return this.prisma.appointments.findUnique({
+      where: {
+        id: id,
+      },
+      include: {
+        doctor: true,
+        patient: true,
+        organization: true,
+      },
+    });
   }
 
   async createAppointment(
     createAppointmentDto: CreateAppointmentDto,
   ): Promise<AppointmentEntity> {
-    console.log('createAppointmentDto: ', createAppointmentDto);
-    return new AppointmentEntity();
+    return this.prisma.appointments.create({
+      data: {
+        ...createAppointmentDto,
+      },
+      include: {
+        doctor: true,
+        patient: true,
+        organization: true,
+      },
+    });
   }
 }
