@@ -1,0 +1,92 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+
+model User {
+  id    Int     @default(autoincrement()) @id
+  email String  @unique
+  salt  String
+  password String
+  role  Role    @default(Patient)
+  createdAt DateTime   @default(now()) @map("created_at")
+  updatedAt DateTime   @updatedAt @map("updated_at")
+  organizationId Int?  @map("organization_id")
+  organization Organization? @relation(fields: [organizationId], references: [id])
+  patient Patient? 
+  doctor Doctor?
+
+   @@map("users")
+}
+
+enum Role {
+  Patient
+  Doctor
+  Admin
+  SuperAdmin
+}
+
+model Patient {
+  id Int @default(autoincrement()) @id
+  userId Int @map("user_id") @unique
+  user User @relation(fields: [userId], references: [id]) 
+  createdAt DateTime   @default(now()) @map("created_at")
+  updatedAt DateTime   @updatedAt @map("updated_at")
+  organizationId Int  @map("organization_id")
+  organization Organization? @relation(fields: [organizationId], references: [id])
+  appointments Appointments[]
+
+   @@map("patients")
+}
+
+model Doctor {
+  id Int @default(autoincrement()) @id
+  userId Int @map("user_id") @unique
+  user User @relation(fields: [userId], references: [id])
+  createdAt DateTime   @default(now()) @map("created_at")
+  updatedAt DateTime   @updatedAt @map("updated_at")
+  organizationId Int  @map("organization_id")
+  organization Organization? @relation(fields: [organizationId], references: [id])
+  appointments Appointments[]
+
+   @@map("doctors")
+}
+
+model Organization {
+  id Int @default(autoincrement()) @id
+  name String
+  createdAt DateTime   @default(now()) @map("created_at")
+  updatedAt DateTime   @updatedAt @map("updated_at")
+  users User[]
+  patients Patient[]
+  doctors Doctor[]
+  appointments Appointments[]
+
+   @@map("organizations")
+}
+
+model Appointments {
+  id Int @default(autoincrement()) @id
+  date DateTime
+  patientId Int @map("patient_id")
+  patient Patient @relation(fields: [patientId], references: [id])
+  doctorId Int @map("doctor_id")
+  doctor Doctor @relation(fields: [doctorId], references: [id])
+  createdAt DateTime   @default(now()) @map("created_at")
+  updatedAt DateTime   @updatedAt @map("updated_at")
+  organizationId Int @map("organization_id")
+  organization Organization @relation(fields: [organizationId], references: [id])
+
+   @@map("appointments")
+}
