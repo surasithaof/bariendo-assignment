@@ -1,14 +1,14 @@
 import NextAuth from "next-auth/next";
 import CredentialsProvider from "next-auth/providers/credentials";
-import * as Auth from "../../../libs/auth";
+import * as Auth from "../../../lib/auth";
 import { decode } from "jsonwebtoken";
 import { JWT } from "next-auth/jwt";
 import { NextAuthOptions } from "next-auth";
 import axios, { AxiosError } from "axios";
-import { JWTPayload, UserData } from "@/libs/types/next-auth";
-import { LoginCredential } from "@/libs/types/auth.type";
-import { APIErrorResponse } from "@/libs/types/shared.type";
-import { AppRoute } from "../../../libs/constants";
+import { JWTPayload, UserData } from "@/lib/types/next-auth";
+import { LoginCredential } from "@/lib/types/auth.type";
+import { APIErrorResponse } from "@/lib/types/shared.type";
+import { AppRoute } from "../../../lib/constants";
 
 export const authOptions: NextAuthOptions = {
   session: {

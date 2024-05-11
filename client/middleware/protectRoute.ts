@@ -13,7 +13,7 @@ import {
   OfficerProtectRoutes,
   PatientProtectRoutes,
   SuperAdminProtectRoutes,
-} from "../libs/constants";
+} from "../lib/constants";
 export const protectRoute: MiddlewareFactory = (next: NextMiddleware) => {
   return async (request: NextRequest, _next: NextFetchEvent) => {
     const { pathname } = request.nextUrl;

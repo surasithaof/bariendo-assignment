@@ -2,8 +2,8 @@ import {
   LoginCredential,
   LoginResponse,
   RegisterPayload,
-} from "../../types/auth.type";
-import AxiosInstance from "../../axios/AxiosInstanceClient";
+} from "../types/auth.type";
+import AxiosInstance from "../axios/AxiosInstanceClient";
 
 export const loginApi = async (credentials: LoginCredential) => {
   return AxiosInstance.post<LoginResponse>("/auth/sign-in", credentials);

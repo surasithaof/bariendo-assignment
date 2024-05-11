@@ -20,7 +20,6 @@ Object.freeze(ErrorCode);
 export const AppRoute = {
   Home: "/",
   Auth: {
-    Main: "/auth",
     SignIn: "/auth/sign-in",
     Register: "/auth/sign-up",
   },

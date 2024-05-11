@@ -1,8 +1,4 @@
-import {
-  loginApi,
-  refreshTokenApi,
-  registerStudentApi,
-} from "./apis/auth/authApi";
+import { loginApi, refreshTokenApi, registerStudentApi } from "./auth/authApi";
 import {
   LoginCredential,
   LoginResponse,
