@@ -51,7 +51,6 @@ enum Role {
 
 model Patient {
   id Int @default(autoincrement()) @id
-  name String
   userOrganizationId Int @map("user_organization_id") @unique
   userOrganization UserOrganization @relation(fields: [userOrganizationId], references: [id]) 
   createdAt DateTime   @default(now()) @map("created_at")
@@ -63,7 +62,6 @@ model Patient {
 
 model Doctor {
   id Int @default(autoincrement()) @id
-  name String
   userOrganizationId Int @map("user_organization_id") @unique
   userOrganization UserOrganization @relation(fields: [userOrganizationId], references: [id]) 
   createdAt DateTime   @default(now()) @map("created_at")

@@ -24,6 +24,8 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup(httPrefix + '/swagger', app, document);
 
+  app.enableCors();
+
   const httpPort = process.env.HTTP_PORT || 3001;
   await app.listen(httpPort, () => {
     console.log(`Server is running on http://localhost:${httpPort}`);

@@ -4,7 +4,6 @@ import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -15,131 +14,164 @@ import React from "react";
 import {
   Card,
   CardContent,
-  CardDescription,
   CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Label } from "@/components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { useForm } from "react-hook-form";
+import { set, useForm, useFormContext } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+import { signIn, useSession } from "next-auth/react";
+import { login } from "@/lib/auth/auth";
+import { AppRoute, ErrorMessages } from "@/lib/constants";
+import { useRouter, useSearchParams } from "next/navigation";
+import axios, { AxiosError } from "axios";
+import { APIErrorResponse } from "@/lib/types/shared.type";
+
+const formSchema = z.object({
+  email: z.string().email(),
+  password: z.string().min(1, "Password is required"),
+});
+
+type FormSchemaType = z.infer<typeof formSchema>;
 
 function Page() {
-  const form = useForm();
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const sesssion = useSession();
+  const [loginError, setLoginError] = React.useState<string | null>(null);
 
-  // TODO: fetch orgs
+  React.useEffect(() => {
+    if (sesssion?.status === "authenticated") {
+      router.push(AppRoute.Home);
+    }
+  }, [router, sesssion]);
 
-  // TODO: handle form submit
+  const form = useForm<FormSchemaType>({
+    resolver: zodResolver(formSchema),
+    mode: "onTouched",
+    defaultValues: {
+      email: "",
+      password: "",
+    },
+  });
+  const { reset } = form;
+
+  React.useEffect(() => {
+    const error = searchParams.get("error");
+    if (error) {
+      setLoginError(error);
+    }
+  }, [searchParams]);
+
+  const onSubmit = async (data: FormSchemaType) => {
+    const loginResp = await login({
+      email: data.email,
+      password: data.password,
+    })
+      .catch((ex) => {
+        let error = ErrorMessages.SERVICE_ERROR;
+        if (axios.isAxiosError(ex)) {
+          const axiosError = ex as AxiosError;
+          const errorObj = axiosError?.response?.data as APIErrorResponse;
+          if (errorObj) {
+            error = errorObj.message;
+          }
+        }
+        setLoginError(error);
+        router.push("?error=" + error);
+      })
+      .finally(() => {
+        reset();
+      });
+
+    if (loginResp) {
+      const callbackUrl = searchParams.get("callbackUrl") || AppRoute.Home;
+      await signIn("token", {
+        accessToken: loginResp.accessToken,
+        refreshToken: loginResp.refreshToken,
+        redirect: true,
+        callbackUrl: callbackUrl,
+      });
+    }
+  };
 
   return (
     <ContentWrapper>
       <div className="w-fit mx-auto my-20">
-        {/* <Form {...form}>
-          <FormField
-            control={form.control}
-            name="username"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Email</FormLabel>
-                <FormControl>
-                  <Input placeholder="Enter your email" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={form.control}
-            name="password"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Password</FormLabel>
-                <FormControl>
-                  <Input
-                    placeholder="Enter your password"
-                    {...field}
-                    type="password"
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <FormDescription>
-            {`Don't have an account?`}
-            <a href="/auth/sign-up" className="text-blue-500">
-              Sign up
-            </a>
-          </FormDescription>
-
-          <Button type="submit" className="w-full">
-            Sign In
-          </Button>
-        </Form> */}
-
         <Card className="w-[350px]">
-          <CardHeader>
-            <CardTitle>Sign In</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <form>
-              <div className="grid w-full items-center gap-4">
-                <div className="flex flex-col space-y-1.5">
-                  <Label htmlFor="email">Email</Label>
-                  <Input
-                    id="email"
-                    placeholder="Enter your email"
-                    type="email"
+          <Form {...form}>
+            <form
+              onSubmit={form.handleSubmit(onSubmit)}
+              onFocus={() => setLoginError(null)}
+            >
+              <CardHeader>
+                <CardTitle>Sign In</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  <FormField
+                    control={form.control}
+                    name="email"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Email</FormLabel>
+                        <FormControl>
+                          <Input placeholder="Enter your email" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
                   />
-                </div>
 
-                <div className="flex flex-col space-y-1.5">
-                  <Label htmlFor="password">Password</Label>
-                  <Input
-                    id="password"
-                    placeholder="Enter your password"
-                    type="password"
+                  <FormField
+                    control={form.control}
+                    name="password"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Password</FormLabel>
+                        <FormControl>
+                          <Input
+                            placeholder="Enter your password"
+                            {...field}
+                            type="password"
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
                   />
-                </div>
 
-                <div className="flex flex-col space-y-1.5">
-                  <Label htmlFor="organization">Organization</Label>
-                  <Select>
-                    <SelectTrigger id="organization">
-                      <SelectValue placeholder="Select" />
-                    </SelectTrigger>
-                    <SelectContent position="popper">
-                      <SelectItem value="a">Org A</SelectItem>
-                      <SelectItem value="b">Org B</SelectItem>
-                      <SelectItem value="c">Org C</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
+                  <div className="flex flex-col space-y-1. text-sm">
+                    <span>
+                      {`Don't have an account? `}
+                      <a href="/auth/sign-up" className="text-blue-500">
+                        Sign Up
+                      </a>
+                    </span>
+                  </div>
 
-                <div className="flex flex-col space-y-1.5">
-                  <span>
-                    {`Don't have an account? `}
-                    <a href="/auth/sign-up" className="text-blue-500">
-                      Sign Up
-                    </a>
-                  </span>
+                  {loginError && (
+                    <div className="flex flex-col space-y-1. text-sm text-destructive text-center">
+                      <span>{loginError}</span>
+                    </div>
+                  )}
                 </div>
-              </div>
+              </CardContent>
+              <CardFooter className="flex justify-between">
+                <Button
+                  type="submit"
+                  className="w-full"
+                  variant="default"
+                  disabled={
+                    !form.formState.isValid || form.formState.isSubmitting
+                  }
+                >
+                  Sign In
+                </Button>
+              </CardFooter>
             </form>
-          </CardContent>
-          <CardFooter className="flex justify-between">
-            <Button type="submit" className="w-full" variant="default">
-              Sign In
-            </Button>
-          </CardFooter>
+          </Form>
         </Card>
       </div>
     </ContentWrapper>

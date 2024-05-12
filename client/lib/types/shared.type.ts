@@ -9,8 +9,7 @@ export interface OptionString {
 }
 
 export interface APIErrorResponse {
-  httpStatus: number;
-  code: string;
+  statusCode: number;
   message: string;
 }
 

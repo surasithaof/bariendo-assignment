@@ -12,13 +12,13 @@ export class AppointmentEntity implements Appointments {
   patientId: number;
 
   @ApiProperty()
-  patient: PatientEntity;
+  patient?: PatientEntity;
 
   @ApiProperty()
   doctorId: number;
 
   @ApiProperty()
-  doctor: DoctorEntity;
+  doctor?: DoctorEntity;
 
   @ApiProperty()
   date: Date;
@@ -33,5 +33,5 @@ export class AppointmentEntity implements Appointments {
   organizationId: number;
 
   @ApiProperty()
-  organization: OrgEntity;
+  organization?: OrgEntity;
 }

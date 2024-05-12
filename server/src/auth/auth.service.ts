@@ -58,12 +58,12 @@ export class AuthService {
   async signIn(signInDto: SignInDto): Promise<AuthEntity> {
     const user = await this.userService.findByEmail(signInDto.email);
     if (!user) {
-      throw new HttpException('Invalid email or password', 400);
+      throw new HttpException('Invalid credentials', 400);
     }
 
     const password = await hashPassword(signInDto.password, user.salt);
     if (password !== user.password) {
-      throw new HttpException('Invalid email or password', 400);
+      throw new HttpException('Invalid credentials', 400);
     }
 
     const { accessToken, expiresIn: accessTokenExpire } =

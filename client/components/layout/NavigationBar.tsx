@@ -1,15 +1,21 @@
 "use client";
 import { ModeToggle } from "@/components/shared/ModeToggle";
 import { Button } from "@/components/ui/button";
-import { Cross2Icon, HamburgerMenuIcon } from "@radix-ui/react-icons";
 import Link from "next/link";
 import React from "react";
 import AppIcon from "../shared/AppIcon";
+import { signIn, signOut, useSession } from "next-auth/react";
+import { EnterIcon, ExitIcon } from "@radix-ui/react-icons";
 
 export default function NavigationBar() {
-  const [open, setOpen] = React.useState(false);
-  const handleOpenSideNav = () => {
-    setOpen(!open);
+  const sesssion = useSession();
+
+  const handleSignIn = async () => {
+    await signIn();
+  };
+
+  const handleSignOut = async () => {
+    signOut().then(() => window.location.replace("/"));
   };
 
   return (
@@ -24,6 +30,17 @@ export default function NavigationBar() {
             <div>
               <ModeToggle />
             </div>
+            {sesssion.status != "authenticated" && (
+              <Button onClick={handleSignIn} variant="outline" className="px-3">
+                <EnterIcon className="h-[1.2rem] w-[1.2rem] mr-2" />
+                Sign In
+              </Button>
+            )}
+            {sesssion.status == "authenticated" && (
+              <Button onClick={handleSignOut} variant="outline" size="icon">
+                <ExitIcon className="h-[1.2rem] w-[1.2rem]" />
+              </Button>
+            )}
           </div>
         </div>
       </nav>

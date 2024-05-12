@@ -9,9 +9,6 @@ export class PatientEntity implements Patient {
   userOrganizationId: number;
 
   @ApiProperty()
-  name: string;
-
-  @ApiProperty()
   createdAt: Date;
 
   @ApiProperty()

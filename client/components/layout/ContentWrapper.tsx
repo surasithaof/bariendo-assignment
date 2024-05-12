@@ -12,7 +12,7 @@ export default function ContentWrapper({
   return (
     <div>
       <NavigationBar />
-      <main className="p-6 md:p-16 md:py-8 lg:px-24 lg:py-8">{children}</main>
+      <main className="p-4 md:p-16 md:py-8 lg:px-24 lg:py-8">{children}</main>
       {footer && <Footer />}
     </div>
   );

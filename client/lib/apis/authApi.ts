@@ -9,7 +9,7 @@ export const loginApi = async (credentials: LoginCredential) => {
   return AxiosInstance.post<LoginResponse>("/auth/sign-in", credentials);
 };
 
-export const registerStudentApi = async (payload: RegisterPayload) => {
+export const registerApi = async (payload: RegisterPayload) => {
   return AxiosInstance.post<LoginResponse>("/auth/sign-up", payload);
 };
 

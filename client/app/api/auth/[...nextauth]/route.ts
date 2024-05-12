@@ -1,6 +1,6 @@
 import NextAuth from "next-auth/next";
 import CredentialsProvider from "next-auth/providers/credentials";
-import * as Auth from "../../../lib/auth";
+import * as Auth from "../../../../lib/auth/auth";
 import { decode } from "jsonwebtoken";
 import { JWT } from "next-auth/jwt";
 import { NextAuthOptions } from "next-auth";
@@ -8,7 +8,7 @@ import axios, { AxiosError } from "axios";
 import { JWTPayload, UserData } from "@/lib/types/next-auth";
 import { LoginCredential } from "@/lib/types/auth.type";
 import { APIErrorResponse } from "@/lib/types/shared.type";
-import { AppRoute } from "../../../lib/constants";
+import { AppRoute } from "../../../../lib/constants";
 
 export const authOptions: NextAuthOptions = {
   session: {
@@ -23,7 +23,7 @@ export const authOptions: NextAuthOptions = {
       // e.g. domain, username, password, 2FA token, etc.
       // You can pass any HTML attribute to the <input> tag through the object.
       credentials: {
-        username: { label: "Username", type: "text", placeholder: "jsmith" },
+        email: { label: "Email", type: "email" },
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials, req) {
@@ -123,8 +123,6 @@ export const authOptions: NextAuthOptions = {
   },
 };
 
-export default NextAuth(authOptions);
-
 async function refreshAccessToken(
   token: JWT,
   accessToken: string,
@@ -154,3 +152,7 @@ async function refreshAccessToken(
     return token;
   }
 }
+
+export const handler = NextAuth(authOptions);
+
+export { handler as GET, handler as POST };

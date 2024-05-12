@@ -1,21 +1,10 @@
 import { UserRole } from "./types/auth.enum";
 
 export const ErrorMessages = {
-  INVLAID_LOGIN_CRED: "ชื่อผู้ใช้งานหรือรหัสผ่านไม่ถูกต้อง",
-  INACTIVE_USER: "ผู้ใช้งานถูกระงับ",
-  BAD_REQUEST: "ข้อมูลไม่ถูกต้อง",
-  INVALID_OTP: "OTP ไม่ถูกต้อง",
-  SERVICE_ERROR: "เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง",
-  UNAUTHORIZED: "ไม่มีสิทธิ์เข้าใช้งาน กรุณาใช้งานด้วยสิทธิ์การใช้งานอื่น",
+  SERVICE_ERROR: "Something went wrong. Please try again later",
+  UNAUTHORIZED: "Unauthorized",
 };
 Object.freeze(ErrorMessages);
-
-export const ErrorCode = {
-  INVLAID_LOGIN_CRED: "INVLAID_LOGIN_CRED",
-  INACTIVE_USER: "INACTIVE_USER",
-  SERVICE_ERROR: "SERVICE_ERROR",
-};
-Object.freeze(ErrorCode);
 
 export const AppRoute = {
   Home: "/",

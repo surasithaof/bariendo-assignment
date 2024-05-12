@@ -1,9 +1,9 @@
-import { loginApi, refreshTokenApi, registerStudentApi } from "./auth/authApi";
+import { loginApi, refreshTokenApi, registerApi } from "../apis/authApi";
 import {
   LoginCredential,
   LoginResponse,
   RegisterPayload,
-} from "./types/auth.type";
+} from "../types/auth.type";
 
 export async function login(
   credentials: LoginCredential
@@ -16,9 +16,9 @@ export async function login(
   }
 }
 
-export async function registerStudent(payload: RegisterPayload) {
+export async function register(payload: RegisterPayload) {
   try {
-    const resp = await registerStudentApi(payload);
+    const resp = await registerApi(payload);
     return resp.data;
   } catch (ex: any) {
     throw ex;
