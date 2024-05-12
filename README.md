@@ -12,7 +12,7 @@ Start database instance with docker
 docker-compose up -d postgres
 ```
 
-### API Server
+### API Server (NestJS)
 
 Go to [/server](/server)
 
@@ -22,7 +22,7 @@ Go to [/server](/server)
 - Database seed data: `pnpm db:seed`
 - Start dev server: `pnpm start`
 
-### UI
+### UI (NextJS)
 
 Go to [/client](/client)
 
