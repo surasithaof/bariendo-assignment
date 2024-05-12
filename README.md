@@ -29,3 +29,13 @@ Go to [/client](/client)
 - Environment variables: Create file `.env` in [/client](/client) directory using example from [.env.example](/client/.env.example)
 - Install dependencies with pnpm: `pnpm i`
 - Start dev server: `pnpm dev`
+
+### Seed data
+
+I added seed data which are organizations, super admin and organization admin users as below.
+| orgs | role | email | password |
+|-------|------------|-------------------------|-----------|
+| - | SuperAdmin | superadmin@bariendo.com | P@ssw0rd! |
+| Org A | Admin | admin@orga.com | P@ssw0rd! |
+| Org B | Admin | admin@orgb.com | P@ssw0rd! |
+| Org C | Admin | admin@orgc.com | P@ssw0rd! |
