@@ -30,7 +30,7 @@ Go to [/client](/client)
 - Install dependencies with pnpm: `pnpm i`
 - Start dev server: `pnpm dev`
 
-### Seed data
+## Seed data
 
 I added seed data which are organizations, super admin and organization admin users as below.
 | orgs | role | email | password |
