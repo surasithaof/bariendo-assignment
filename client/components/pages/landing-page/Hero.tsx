@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button";
+import { AppRoute } from "@/lib/constants";
 import { GitHubLogoIcon } from "@radix-ui/react-icons";
 import Link from "next/link";
 import React from "react";
@@ -23,7 +24,7 @@ export default function Hero() {
 
         <div className="flex justify-center flex-col md:flex-row gap-2">
           <Button asChild className="w-full px-20 md:w-fit">
-            <Link href={"/home"}>Get started</Link>
+            <Link href={AppRoute.Home}>Get started</Link>
           </Button>
           <Button asChild className="w-full px-20 md:w-fit" variant="outline">
             <Link

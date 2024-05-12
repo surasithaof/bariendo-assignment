@@ -29,31 +29,31 @@ export async function middleware(request: NextRequest) {
     }
 
     // TODO: server side should sign organization and role in token.
-    console.log(jwtUser?.user);
-    if (
-      hasRole(jwtUser?.user?.role, UserRole.Patient) &&
-      pathMatch(PatientProtectRoutes, pathname)
-    ) {
-      return NextResponse.next();
-    } else if (
-      hasRole(jwtUser?.user?.role, UserRole.Doctor) &&
-      pathMatch(DoctorProtectRoutes, pathname)
-    ) {
-      return NextResponse.next();
-    } else if (
-      hasRole(jwtUser?.user?.role, UserRole.Admin) &&
-      pathMatch(AdminProtectRoutes, pathname)
-    ) {
-      return NextResponse.next();
-    } else if (
-      hasRole(jwtUser?.user?.role, UserRole.SuperAdmin) &&
-      pathMatch(SuperAdminProtectRoutes, pathname)
-    ) {
-      return NextResponse.next();
-    } else {
-      const url = new URL(AppRoute.UnAuthorized, request.url);
-      return NextResponse.rewrite(url);
-    }
+    // console.log(jwtUser?.user);
+    // if (
+    //   hasRole(jwtUser?.user?.role, UserRole.Patient) &&
+    //   pathMatch(PatientProtectRoutes, pathname)
+    // ) {
+    //   return NextResponse.next();
+    // } else if (
+    //   hasRole(jwtUser?.user?.role, UserRole.Doctor) &&
+    //   pathMatch(DoctorProtectRoutes, pathname)
+    // ) {
+    //   return NextResponse.next();
+    // } else if (
+    //   hasRole(jwtUser?.user?.role, UserRole.Admin) &&
+    //   pathMatch(AdminProtectRoutes, pathname)
+    // ) {
+    //   return NextResponse.next();
+    // } else if (
+    //   hasRole(jwtUser?.user?.role, UserRole.SuperAdmin) &&
+    //   pathMatch(SuperAdminProtectRoutes, pathname)
+    // ) {
+    //   return NextResponse.next();
+    // } else {
+    //   const url = new URL(AppRoute.UnAuthorized, request.url);
+    //   return NextResponse.rewrite(url);
+    // }
   }
   return NextResponse.next();
 }

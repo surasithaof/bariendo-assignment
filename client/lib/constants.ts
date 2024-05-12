@@ -8,7 +8,7 @@ Object.freeze(ErrorMessages);
 
 export const AppRoute = {
   Base: "/",
-  Home: "/home",
+  Home: "/appointments",
   Auth: {
     SignIn: "/auth/sign-in",
     Register: "/auth/sign-up",
