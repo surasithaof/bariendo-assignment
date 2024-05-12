@@ -31,12 +31,11 @@ export const authOptions: NextAuthOptions = {
           const loginResponse = await Auth.login(
             credentials as LoginCredential
           );
-          const { sub, email, username, exp, role } = decode(
+          const { sub, email, exp, role } = decode(
             loginResponse.accessToken
           ) as JWTPayload;
           const user: UserData = {
             id: sub,
-            name: username,
             email: email,
             accessToken: loginResponse.accessToken,
             accessTokenExpires: exp,
@@ -71,12 +70,11 @@ export const authOptions: NextAuthOptions = {
       },
       async authorize(credentials, req) {
         try {
-          const { sub, email, username, exp, role } = decode(
+          const { sub, email, exp, role } = decode(
             credentials?.accessToken || ""
           ) as JWTPayload;
           const user: UserData = {
             id: sub,
-            name: username,
             email: email,
             accessToken: credentials?.accessToken || "",
             accessTokenExpires: exp,
@@ -133,12 +131,11 @@ async function refreshAccessToken(
       accessToken,
       refreshToken
     );
-    const { sub, email, username, exp, role } = decode(
+    const { sub, email, exp, role } = decode(
       refreshTokenResponse.accessToken
     ) as JWTPayload;
     const refreshedUser: UserData = {
       id: sub,
-      name: username,
       email: email,
       accessToken: refreshTokenResponse.accessToken,
       accessTokenExpires: exp,

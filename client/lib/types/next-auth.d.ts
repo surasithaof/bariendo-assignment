@@ -3,7 +3,6 @@ import JWT from "next-auth/jwt";
 
 export interface UserData extends User {
   id: string;
-  name: string;
   email: string;
   accessToken: string;
   accessTokenExpires: number;
@@ -17,7 +16,6 @@ export interface JWTPayload {
   sid: string;
   jti: string;
   role: string | string[];
-  username: string;
   userInfo: string;
   email: string;
   nbf: number;

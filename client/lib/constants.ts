@@ -7,19 +7,21 @@ export const ErrorMessages = {
 Object.freeze(ErrorMessages);
 
 export const AppRoute = {
-  Home: "/",
+  Base: "/",
+  Home: "/home",
   Auth: {
     SignIn: "/auth/sign-in",
     Register: "/auth/sign-up",
   },
   Manage: {
     Base: "/manage",
-    Courses: "/manage/courses",
-    LearningResults: "/manage/learning-results",
     Users: "/manage/users",
-    SystemConfigs: "/manage/system-configs",
+    Appointments: "/manage/appointments",
   },
-  MyProfile: "/my-profile",
+  Appointment: {
+    Base: "/appointments",
+    Detail: "/appointments/:id",
+  },
   Error: "/error",
   UnAuthorized: "/403",
 };
@@ -27,28 +29,36 @@ Object.freeze(AppRoute);
 
 export const userRoles = [
   { key: UserRole.SuperAdmin, label: UserRole.SuperAdmin },
-  { key: UserRole.Officer, label: UserRole.Officer },
+  { key: UserRole.Admin, label: UserRole.Admin },
   { key: UserRole.Doctor, label: UserRole.Doctor },
   { key: UserRole.Patient, label: UserRole.Patient },
 ];
 
-export const PatientProtectRoutes: string[] = [AppRoute.MyProfile];
+export const PatientProtectRoutes: string[] = [
+  AppRoute.Home,
+  AppRoute.Appointment.Base,
+];
 
-export const OfficerProtectRoutes: string[] = [
+export const DoctorProtectRoutes: string[] = [
+  AppRoute.Home,
+  AppRoute.Appointment.Base,
+];
+
+export const AdminProtectRoutes: string[] = [
+  AppRoute.Home,
   AppRoute.Manage.Base,
   AppRoute.Manage.Users,
-  AppRoute.Manage.LearningResults,
-  AppRoute.Manage.SystemConfigs,
-  AppRoute.MyProfile,
+  AppRoute.Manage.Appointments,
 ];
 
 export const SuperAdminProtectRoutes: string[] = [
-  ...OfficerProtectRoutes,
+  ...AdminProtectRoutes,
   AppRoute.Manage.Users,
 ];
 
 export const AllProtectRoutes: string[] = [
   ...PatientProtectRoutes,
-  ...OfficerProtectRoutes,
+  ...DoctorProtectRoutes,
+  ...AdminProtectRoutes,
   ...SuperAdminProtectRoutes,
 ];
