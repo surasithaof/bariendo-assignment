@@ -5,13 +5,7 @@ export class CreatePatientDto {
   name: string;
 
   @ApiProperty()
-  userId: number;
-
-  @ApiProperty()
-  createdAt: Date;
-
-  @ApiProperty()
-  updatedAt: Date;
+  userOrganizationId: number;
 
   @ApiProperty()
   organizationId: number;

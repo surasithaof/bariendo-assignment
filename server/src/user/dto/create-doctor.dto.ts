@@ -5,13 +5,7 @@ export class CreateDoctorDto {
   name: string;
 
   @ApiProperty()
-  userId: number;
-
-  @ApiProperty()
-  createdAt: Date;
-
-  @ApiProperty()
-  updatedAt: Date;
+  userOrganizationId: number;
 
   @ApiProperty()
   organizationId: number;

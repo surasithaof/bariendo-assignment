@@ -6,6 +6,8 @@ import { PatientEntity } from './entities/patient.entity';
 import { DoctorEntity } from './entities/doctor.entity';
 import { CreateDoctorDto } from './dto/create-doctor.dto';
 import { CreatePatientDto } from './dto/create-patient.dto';
+import { UserOrganizationEntity } from './entities/user-orgs.entity';
+import { CreateUserOrgDto } from './dto/create-user-org.dto';
 
 @Injectable()
 export class UserService {
@@ -21,9 +23,13 @@ export class UserService {
         id: id,
       },
       include: {
-        doctor: true,
-        patient: true,
-        organization: true,
+        usersOrganization: {
+          include: {
+            organization: true,
+            patient: true,
+            doctor: true,
+          },
+        },
       },
     });
   }
@@ -41,6 +47,16 @@ export class UserService {
       data: {
         ...data,
         email: data.email.trim().toLowerCase(),
+      },
+    });
+  }
+
+  async createUserOrganization(
+    data: CreateUserOrgDto,
+  ): Promise<UserOrganizationEntity> {
+    return this.prisma.userOrganization.create({
+      data: {
+        ...data,
       },
     });
   }

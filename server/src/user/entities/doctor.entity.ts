@@ -3,20 +3,17 @@ import { Doctor } from '@prisma/client';
 
 export class DoctorEntity implements Doctor {
   @ApiProperty()
-  name: string;
-
-  @ApiProperty()
   id: number;
 
   @ApiProperty()
-  userId: number;
+  userOrganizationId: number;
+
+  @ApiProperty()
+  name: string;
 
   @ApiProperty()
   createdAt: Date;
 
   @ApiProperty()
   updatedAt: Date;
-
-  @ApiProperty()
-  organizationId: number;
 }

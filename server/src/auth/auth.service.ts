@@ -27,41 +27,14 @@ export class AuthService {
       throw new HttpException('User already exists', 400);
     }
 
-    const org = await this.orgService.getOrgById(createUserDto.organizationId);
-    if (!org) {
-      throw new HttpException('Organization not found', 400);
-    }
-
     const salt = await generateSalt();
     const password = await hashPassword(createUserDto.password, salt);
 
     const newUser = await this.userService.createUser({
       email: createUserDto.email,
-      password: password,
       salt: salt,
-      role: createUserDto.role,
-      organizationId: createUserDto.organizationId,
-      createdAt: new Date(),
-      updatedAt: new Date(),
+      password: password,
     });
-
-    if (createUserDto.role === 'Doctor') {
-      this.userService.createDoctor({
-        userId: newUser.id,
-        name: createUserDto.name,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-        organizationId: createUserDto.organizationId,
-      });
-    } else if (createUserDto.role === 'Patient') {
-      this.userService.createPatient({
-        userId: newUser.id,
-        name: createUserDto.name,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-        organizationId: createUserDto.organizationId,
-      });
-    }
 
     const { accessToken, expiresIn: accessTokenExpire } =
       this.generateAccessToken(newUser);
@@ -161,9 +134,7 @@ export class AuthService {
     const accessToken = this.jwtService.sign(
       {
         userId: user.id,
-        role: user.role,
         email: user.email,
-        organizationId: user.organizationId,
       },
       {
         secret: process.env.ACCESS_TOKEN_SECRET,

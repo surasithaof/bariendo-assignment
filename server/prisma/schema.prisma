@@ -19,15 +19,27 @@ model User {
   email String  @unique
   salt  String
   password String
-  role  Role    @default(Patient)
+  isSuperAdmin Boolean @default(false) @map("is_super_admin")
   createdAt DateTime   @default(now()) @map("created_at")
   updatedAt DateTime   @updatedAt @map("updated_at")
-  organizationId Int?  @map("organization_id")
-  organization Organization? @relation(fields: [organizationId], references: [id])
+  usersOrganization UserOrganization[]
+
+   @@map("users")
+}
+
+model UserOrganization {
+  id Int @default(autoincrement()) @id
+  userId Int @map("user_id")
+  user User @relation(fields: [userId], references: [id])
+  organizationId Int @map("organization_id")
+  organization Organization @relation(fields: [organizationId], references: [id])
+  role  Role    @default(Patient)
+  createdAt DateTime   @default(now()) @map("created_at")
+  updatedAt DateTime   @default(now()) @updatedAt @map("updated_at")
   patient Patient? 
   doctor Doctor?
 
-   @@map("users")
+  @@map("user_organizations")
 }
 
 enum Role {
@@ -40,12 +52,10 @@ enum Role {
 model Patient {
   id Int @default(autoincrement()) @id
   name String
-  userId Int @map("user_id") @unique
-  user User @relation(fields: [userId], references: [id]) 
+  userOrganizationId Int @map("user_organization_id") @unique
+  userOrganization UserOrganization @relation(fields: [userOrganizationId], references: [id]) 
   createdAt DateTime   @default(now()) @map("created_at")
   updatedAt DateTime   @updatedAt @map("updated_at")
-  organizationId Int  @map("organization_id")
-  organization Organization? @relation(fields: [organizationId], references: [id])
   appointments Appointments[]
 
    @@map("patients")
@@ -54,12 +64,10 @@ model Patient {
 model Doctor {
   id Int @default(autoincrement()) @id
   name String
-  userId Int @map("user_id") @unique
-  user User @relation(fields: [userId], references: [id])
+  userOrganizationId Int @map("user_organization_id") @unique
+  userOrganization UserOrganization @relation(fields: [userOrganizationId], references: [id]) 
   createdAt DateTime   @default(now()) @map("created_at")
   updatedAt DateTime   @updatedAt @map("updated_at")
-  organizationId Int  @map("organization_id")
-  organization Organization? @relation(fields: [organizationId], references: [id])
   appointments Appointments[]
 
    @@map("doctors")
@@ -70,9 +78,7 @@ model Organization {
   name String
   createdAt DateTime   @default(now()) @map("created_at")
   updatedAt DateTime   @updatedAt @map("updated_at")
-  users User[]
-  patients Patient[]
-  doctors Doctor[]
+  usersOrganization UserOrganization[]
   appointments Appointments[]
 
    @@map("organizations")

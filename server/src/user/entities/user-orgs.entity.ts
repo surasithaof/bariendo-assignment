@@ -1,21 +1,18 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { User } from '@prisma/client';
+import { $Enums, UserOrganization } from '@prisma/client';
 
-export class UserEntity implements User {
+export class UserOrganizationEntity implements UserOrganization {
   @ApiProperty()
   id: number;
 
   @ApiProperty()
-  email: string;
+  userId: number;
 
   @ApiProperty()
-  salt: string;
+  organizationId: number;
 
   @ApiProperty()
-  password: string;
-
-  @ApiProperty()
-  isSuperAdmin: boolean;
+  role: $Enums.Role;
 
   @ApiProperty()
   createdAt: Date;
