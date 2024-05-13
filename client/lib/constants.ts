@@ -21,6 +21,10 @@ export const AppRoute = {
   Appointment: {
     Base: "/appointments",
     Detail: "/appointments/:id",
+    New: "/appointments/new",
+  },
+  Org: {
+    Join: "/orgs/join",
   },
   Error: "/error",
   UnAuthorized: "/403",
@@ -37,11 +41,13 @@ export const userRoles = [
 export const PatientProtectRoutes: string[] = [
   AppRoute.Home,
   AppRoute.Appointment.Base,
+  AppRoute.Org.Join,
 ];
 
 export const DoctorProtectRoutes: string[] = [
   AppRoute.Home,
   AppRoute.Appointment.Base,
+  AppRoute.Org.Join,
 ];
 
 export const AdminProtectRoutes: string[] = [

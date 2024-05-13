@@ -1,11 +1,13 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, UseGuards } from '@nestjs/common';
 import { OrgService } from './org.service';
 import {
+  ApiBearerAuth,
   ApiInternalServerErrorResponse,
   ApiOkResponse,
   ApiTags,
 } from '@nestjs/swagger';
 import { OrgEntity } from './entities/org.entity';
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 
 @Controller('orgs')
 @ApiTags('orgs')
@@ -15,6 +17,8 @@ export class OrgController {
     this.orgService = orgService;
   }
 
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
   @Get()
   @ApiOkResponse({ description: 'Orgs list', type: [OrgEntity] })
   @ApiInternalServerErrorResponse({ description: 'Internal server error' })

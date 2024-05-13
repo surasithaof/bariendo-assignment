@@ -1,27 +1,20 @@
 import { UserRole } from "./auth.enum";
-import { PagingReq } from "./shared.type";
+import { Organization } from "./org.type";
 
-export interface UserDto {
+export interface User {
   id: number;
-  firstName: string;
-  lastName: string;
-  username: string;
   email: string;
-  role: string;
-  agency: string;
-  active: boolean;
   updatedAt: string;
   createdAt: string;
 }
 
-export interface UserListReq extends PagingReq {
-  keyword?: string;
-  status?: UserStatus;
-  roles?: UserRole[];
-}
-
-export enum UserStatus {
-  Active = "Active",
-  Inactive = "Inactive",
-  All = "All",
+export interface UserOrganization {
+  id: number;
+  userId: number;
+  user?: User;
+  organizationId: number;
+  organization?: Organization;
+  role: UserRole;
+  updatedAt: string;
+  createdAt: string;
 }

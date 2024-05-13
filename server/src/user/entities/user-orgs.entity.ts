@@ -1,5 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { $Enums, UserOrganization } from '@prisma/client';
+import { UserEntity } from './user.entity';
+import { OrgEntity } from 'src/org/entities/org.entity';
 
 export class UserOrganizationEntity implements UserOrganization {
   @ApiProperty()
@@ -19,4 +21,10 @@ export class UserOrganizationEntity implements UserOrganization {
 
   @ApiProperty()
   updatedAt: Date;
+
+  @ApiProperty()
+  user?: UserEntity;
+
+  @ApiProperty()
+  organization?: OrgEntity;
 }

@@ -13,12 +13,6 @@ export interface APIErrorResponse {
   message: string;
 }
 
-export interface PagingReq {
-  page: number;
-  limit: number;
-  order?: string;
-}
-
 export interface Paging<TData> {
   page: number;
   limit: number;

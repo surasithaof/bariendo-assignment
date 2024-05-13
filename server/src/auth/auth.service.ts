@@ -1,14 +1,14 @@
 import { HttpException, Inject, Injectable } from '@nestjs/common';
 import { SignInDto } from './dto/sign-in.dto';
 import { SignUpDto } from './dto/sign-up';
-import { AuthEntity } from './entities/auth.entity';
+import { AuthDto } from './dto/auth.dto';
 import { UserService } from 'src/user/user.service';
 import { generateSalt, hashPassword } from 'src/utils/cryptography';
 import { OrgService } from 'src/org/org.service';
 import { JwtService } from '@nestjs/jwt';
-import { UserEntity } from 'src/user/entities/user.entity';
 import { v4 as uuid } from 'uuid';
 import { CACHE_MANAGER, Cache } from '@nestjs/cache-manager';
+import { UserDto } from 'src/user/dto/user.dto';
 
 @Injectable()
 export class AuthService {
@@ -19,7 +19,7 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
 
-  async signUp(createUserDto: SignUpDto): Promise<AuthEntity> {
+  async signUp(createUserDto: SignUpDto): Promise<AuthDto> {
     const duplicateUser = await this.userService.findByEmail(
       createUserDto.email,
     );
@@ -41,9 +41,10 @@ export class AuthService {
     const { refreshToken, expiresIn: refeshTokenExpire } =
       this.generateRefreshToken(newUser);
 
-    await this.cacheManager.set(
+    await this.cacheToken(
+      accessToken,
       refreshToken,
-      JSON.stringify({ refreshToken, userId: newUser.id }),
+      newUser.id,
       refeshTokenExpire,
     );
 
@@ -55,7 +56,7 @@ export class AuthService {
     };
   }
 
-  async signIn(signInDto: SignInDto): Promise<AuthEntity> {
+  async signIn(signInDto: SignInDto): Promise<AuthDto> {
     const user = await this.userService.findByEmail(signInDto.email);
     if (!user) {
       throw new HttpException('Invalid credentials', 400);
@@ -71,9 +72,10 @@ export class AuthService {
     const { refreshToken, expiresIn: refeshTokenExpire } =
       this.generateRefreshToken(user);
 
-    await this.cacheManager.set(
+    await this.cacheToken(
+      accessToken,
       refreshToken,
-      JSON.stringify({ refreshToken, userId: user.id }),
+      user.id,
       refeshTokenExpire,
     );
 
@@ -85,9 +87,14 @@ export class AuthService {
     };
   }
 
-  async refreshToken(oldRefreshToken: string): Promise<AuthEntity> {
-    const cached = await this.cacheManager.get(oldRefreshToken);
+  async refreshToken(
+    oldAccressToken: string,
+    oldRefreshToken: string,
+  ): Promise<AuthDto> {
+    const cacheKey = this.getTokenCacheKey(oldAccressToken, oldRefreshToken);
+    const cached = await this.cacheManager.get(cacheKey);
     if (!cached) {
+      console.error('cached not found');
       throw new HttpException('Invalid refresh token', 400);
     }
 
@@ -95,6 +102,11 @@ export class AuthService {
       cached as string,
     );
     if (cachedRefreshToken !== oldRefreshToken) {
+      console.error(
+        'cachedRefreshToken !== oldRefreshToken',
+        cachedRefreshToken,
+        oldRefreshToken,
+      );
       throw new HttpException('Invalid refresh token', 400);
     }
 
@@ -107,13 +119,12 @@ export class AuthService {
     const { refreshToken: newRefreshToken, expiresIn: refeshTokenExpire } =
       this.generateRefreshToken(user);
 
-    await this.cacheManager.set(
+    await this.cacheToken(
+      accessToken,
       newRefreshToken,
-      JSON.stringify({ newRefreshToken, userId: user.id }),
+      user.id,
       refeshTokenExpire,
     );
-
-    await this.cacheManager.del(oldRefreshToken);
 
     return {
       accessToken,
@@ -123,16 +134,13 @@ export class AuthService {
     };
   }
 
-  async signOut(refreshToken: string) {
-    await this.cacheManager.del(refreshToken);
-  }
-
-  generateAccessToken(user: UserEntity): {
+  generateAccessToken(user: UserDto): {
     accessToken: string;
     expiresIn: number;
   } {
     const accessToken = this.jwtService.sign(
       {
+        sub: user.id,
         userId: user.id,
         email: user.email,
       },
@@ -147,7 +155,7 @@ export class AuthService {
     };
   }
 
-  generateRefreshToken(user: UserEntity): {
+  generateRefreshToken(user: UserDto): {
     refreshToken: string;
     expiresIn: number;
   } {
@@ -163,5 +171,22 @@ export class AuthService {
       refreshToken,
       expiresIn: parseInt(process.env.REFRESH_TOKEN_EXPIRATION),
     };
+  }
+
+  getTokenCacheKey(accessToken: string, refreshToken: string) {
+    return `token.${accessToken}.${refreshToken}`;
+  }
+
+  async cacheToken(
+    accessToken: string,
+    refreshToken: string,
+    userId: number,
+    expiresIn: number,
+  ) {
+    await this.cacheManager.set(
+      this.getTokenCacheKey(accessToken, refreshToken),
+      JSON.stringify({ refreshToken, userId }),
+      expiresIn * 1000,
+    );
   }
 }

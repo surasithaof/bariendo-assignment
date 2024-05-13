@@ -31,7 +31,7 @@ export default function Hero() {
               href={"https://github.com/surasithaof/bariendo-assignment.git"}
               target="_blank"
             >
-              <GitHubLogoIcon className="w-6 h-6 mr-2" />
+              <GitHubLogoIcon className="w-5 h-5 mr-2" />
               GitHub
             </Link>
           </Button>

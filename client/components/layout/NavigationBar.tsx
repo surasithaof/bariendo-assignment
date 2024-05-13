@@ -6,9 +6,13 @@ import React from "react";
 import AppIcon from "../shared/AppIcon";
 import { signIn, signOut, useSession } from "next-auth/react";
 import { EnterIcon, ExitIcon } from "@radix-ui/react-icons";
+import { useRouter } from "next/navigation";
+import { AppRoute } from "@/lib/constants";
+import { REFRESH_TOKEN_ERROR } from "@/app/api/auth/[...nextauth]/route";
 
 export default function NavigationBar() {
-  const sesssion = useSession();
+  const session = useSession();
+  const router = useRouter();
 
   const handleSignIn = async () => {
     await signIn();
@@ -17,6 +21,15 @@ export default function NavigationBar() {
   const handleSignOut = async () => {
     signOut().then(() => window.location.replace("/"));
   };
+
+  React.useEffect(() => {
+    if (session?.data?.error === REFRESH_TOKEN_ERROR) {
+      signOut().then(() => {
+        sessionStorage.clear();
+      });
+      router.push(AppRoute.Auth.SignIn);
+    }
+  }, [session?.data, router]);
 
   return (
     <div className="sticky top-0 z-40 ">
@@ -30,13 +43,13 @@ export default function NavigationBar() {
             <div>
               <ModeToggle />
             </div>
-            {sesssion.status != "authenticated" && (
+            {session.status != "authenticated" && (
               <Button onClick={handleSignIn} variant="outline" className="px-3">
                 <EnterIcon className="h-[1.2rem] w-[1.2rem] mr-2" />
                 Sign In
               </Button>
             )}
-            {sesssion.status == "authenticated" && (
+            {session.status == "authenticated" && (
               <Button onClick={handleSignOut} variant="outline" size="icon">
                 <ExitIcon className="h-[1.2rem] w-[1.2rem]" />
               </Button>

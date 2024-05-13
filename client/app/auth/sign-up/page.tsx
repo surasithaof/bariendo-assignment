@@ -49,15 +49,15 @@ type FormSchemaType = z.infer<typeof formSchema>;
 
 function Page() {
   const searchParams = useSearchParams();
-  const sesssion = useSession();
+  const session = useSession();
   const router = useRouter();
   const [registerError, setRegisterError] = React.useState<string | null>(null);
 
   React.useEffect(() => {
-    if (sesssion?.status === "authenticated") {
+    if (session?.status === "authenticated") {
       router.push(AppRoute.Home);
     }
-  }, [router, sesssion]);
+  }, [router, session]);
 
   const form = useForm<FormSchemaType>({
     resolver: zodResolver(formSchema),
@@ -71,9 +71,7 @@ function Page() {
   });
   const { reset } = form;
 
-  // TODO: handle form submit
   const onSubmit = async (data: FormSchemaType) => {
-    console.log(data);
     const { email, password } = data;
     const payload: RegisterPayload = {
       email,

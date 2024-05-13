@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { UserEntity } from 'src/user/entities/user.entity';
+import { UserDto } from 'src/user/dto/user.dto';
 
-export class AuthEntity {
+export class AuthDto {
   @ApiProperty()
   accessToken: string;
 
@@ -9,7 +9,7 @@ export class AuthEntity {
   refreshToken: string;
 
   @ApiProperty()
-  user: UserEntity;
+  user: UserDto;
 
   @ApiProperty()
   expiresIn: number;

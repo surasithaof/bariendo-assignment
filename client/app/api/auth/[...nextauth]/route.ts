@@ -10,6 +10,8 @@ import { LoginCredential } from "@/lib/types/auth.type";
 import { APIErrorResponse } from "@/lib/types/shared.type";
 import { AppRoute } from "../../../../lib/constants";
 
+export const REFRESH_TOKEN_ERROR = "RefreshAccessTokenError";
+
 export const authOptions: NextAuthOptions = {
   session: {
     strategy: "jwt",
@@ -145,7 +147,7 @@ async function refreshAccessToken(
     token.user = refreshedUser;
     return token;
   } catch (error) {
-    token.error = "RefreshAccessTokenError";
+    token.error = REFRESH_TOKEN_ERROR;
     return token;
   }
 }

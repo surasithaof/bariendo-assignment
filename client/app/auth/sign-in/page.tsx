@@ -38,14 +38,14 @@ type FormSchemaType = z.infer<typeof formSchema>;
 function Page() {
   const searchParams = useSearchParams();
   const router = useRouter();
-  const sesssion = useSession();
+  const session = useSession();
   const [loginError, setLoginError] = React.useState<string | null>(null);
 
   React.useEffect(() => {
-    if (sesssion?.status === "authenticated") {
+    if (session?.status === "authenticated") {
       router.push(AppRoute.Home);
     }
-  }, [router, sesssion]);
+  }, [router, session]);
 
   const form = useForm<FormSchemaType>({
     resolver: zodResolver(formSchema),

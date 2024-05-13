@@ -20,7 +20,7 @@ Go to [/server](/server)
 - Install dependencies with pnpm: `pnpm i`
 - Database migration: `pnpm db:migrate:deploy`
 - Database seed data: `pnpm db:seed`
-- Start dev server: `pnpm start`
+- Start dev server: `pnpm start` or watch mode `pnpm start:dev`
 
 ### UI (NextJS)
 
