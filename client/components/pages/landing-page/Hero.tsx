@@ -6,7 +6,7 @@ import React from "react";
 
 export default function Hero() {
   return (
-    <section className="w-full px-6 md:px-16 lg:px-24 pt-32 pb-72 bg-gradient-to-b from-slate-200 to-slate-100 dark:from-slate-700 dark:to-slate-900">
+    <section className="w-full px-6 md:px-16 lg:px-24 py-32 bg-gradient-to-b from-slate-200 to-slate-100 dark:from-slate-700 dark:to-slate-900">
       <div className="flex flex-col gap-y-4 md:text-center animate-fade">
         <main className="text-5xl md:text-6xl font-bold">
           <h1 className="inline ">

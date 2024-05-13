@@ -10,5 +10,6 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: postgres
+      TZ: Asia/Bangkok
     volumes:
       - ./data/postgres:/var/lib/postgresql/data

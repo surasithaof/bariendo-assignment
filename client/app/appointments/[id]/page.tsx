@@ -3,7 +3,6 @@ import ContentWrapper from "@/components/layout/ContentWrapper";
 import { Button } from "@/components/ui/button";
 import { AppRoute } from "@/lib/constants";
 import { ArrowLeftIcon } from "@radix-ui/react-icons";
-import { PlusIcon } from "lucide-react";
 import Link from "next/link";
 import React from "react";
 

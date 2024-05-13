@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, Injectable } from '@nestjs/common';
 import { AppointmentEntity } from './entities/appointment.entity';
 import { CreateAppointmentDto } from './dto/create-appointment.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
@@ -63,6 +63,20 @@ export class AppointmentService {
   async createAppointment(
     createAppointmentDto: CreateAppointmentDto,
   ): Promise<AppointmentEntity> {
+    const booked = await this.prisma.appointments.findFirst({
+      where: {
+        organizationId: createAppointmentDto.organizationId,
+        date: createAppointmentDto.date,
+      },
+    });
+
+    if (booked) {
+      throw new HttpException(
+        'Appointment already booked, please select another date and time',
+        400,
+      );
+    }
+
     return this.prisma.appointments.create({
       data: {
         ...createAppointmentDto,

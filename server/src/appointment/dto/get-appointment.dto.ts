@@ -8,15 +8,15 @@ export class GetAppointmentsQuery {
   @Type(() => Number)
   orgId?: number;
 
-  @ApiProperty({ required: false, default: 0 })
+  @ApiProperty({ required: false })
   @IsOptional()
   @Type(() => Number)
-  skip?: number = 0;
+  skip?: number;
 
-  @ApiProperty({ required: false, default: 10 })
+  @ApiProperty({ required: false })
   @IsOptional()
   @Type(() => Number)
-  limit?: number = 10;
+  limit?: number;
 
   @ApiProperty({ required: false })
   @IsOptional()

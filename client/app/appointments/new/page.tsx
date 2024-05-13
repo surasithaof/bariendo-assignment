@@ -20,11 +20,25 @@ import { useSession } from "next-auth/react";
 import Link from "next/link";
 import React from "react";
 import { HomeIcon } from "@radix-ui/react-icons";
+import {
+  createAppointmentApi,
+  getAppointmentsApi,
+} from "@/lib/apis/appointmentApi";
+import { useRouter } from "next/navigation";
 
 function Page() {
+  const router = useRouter();
   const [date, setDate] = React.useState<Date | undefined>(new Date());
   const [hour, setHour] = React.useState<number | undefined>(1);
   const [period, setPeriod] = React.useState<string | undefined>("AM");
+  const [appointmentDate, setAppointmentDate] = React.useState<
+    Date | undefined
+  >();
+  const [bookedAppointments, setBookedAppointments] = React.useState<Date[]>(
+    []
+  );
+
+  const [formValid, setFormValid] = React.useState<boolean>(false);
 
   const session = useSession();
 
@@ -47,7 +61,81 @@ function Page() {
   const handleSelectUserOrg = (orgId: string) => {
     const org = userOrgs.find((org) => org.id.toString() === orgId);
     setSelectedUserOrg(org);
-    // TODO: fetch available dates and times for the selected organization.
+  };
+
+  React.useEffect(() => {
+    const fetchAvailableAppointments = async () => {
+      if (selectedUserOrg && date) {
+        const startDate = new Date(
+          date.getFullYear(),
+          date.getMonth(),
+          date.getDate(),
+          0,
+          0
+        );
+        const endDate = new Date(
+          date.getFullYear(),
+          date.getMonth(),
+          date.getDate(),
+          23,
+          59
+        );
+        const resp = await getAppointmentsApi(
+          selectedUserOrg.organizationId,
+          startDate,
+          endDate
+        );
+        const booked = resp.data.data.map((a) => new Date(a.date));
+        console.log(booked);
+        setBookedAppointments(booked);
+      } else {
+        setBookedAppointments([]);
+      }
+    };
+
+    fetchAvailableAppointments();
+  }, [selectedUserOrg, date]);
+
+  React.useEffect(() => {
+    if (selectedUserOrg && date && hour && period) {
+      let appointmentTime = hour;
+      if (period === "PM") {
+        appointmentTime += 12;
+      }
+      const appointmentDate = new Date(
+        date.getFullYear(),
+        date.getMonth(),
+        date.getDate(),
+        appointmentTime,
+        0
+      );
+      setAppointmentDate(appointmentDate);
+      setFormValid(true);
+    } else {
+      setAppointmentDate(undefined);
+      setFormValid(false);
+    }
+  }, [selectedUserOrg, date, hour, period]);
+
+  const handleSubmit = async () => {
+    if (appointmentDate && selectedUserOrg) {
+      console.log(appointmentDate);
+      const resp = await createAppointmentApi(
+        appointmentDate,
+        selectedUserOrg.organizationId,
+        1, // TODO: get doctor id
+        1 // TODO: get patient id
+      ).catch((err) => {
+        console.log(err.response.data);
+        // TODO: handle error response (bad request, internal server error)
+      });
+
+      if (resp?.data?.id) {
+        router.replace(
+          AppRoute.Appointment.Detail.replace(":id", resp.data.id.toString())
+        );
+      }
+    }
   };
 
   return (
@@ -81,6 +169,7 @@ function Page() {
           </div>
           <div className="flex flex-col gap-4">
             <div className="flex flex-col md:flex-row gap-4">
+              {/* TODO: handle form validation and UX */}
               <div>
                 <Calendar
                   mode="single"
@@ -118,6 +207,15 @@ function Page() {
                           key={`h-${i + 1}`}
                           value={(i + 1).toString()}
                           className="text-center"
+                          disabled={bookedAppointments.some((a) => {
+                            if (a.getHours() > 12) {
+                              return (
+                                i + 1 === a.getHours() - 12 && period === "PM"
+                              );
+                            } else {
+                              return i + 1 === a.getHours() && period === "AM";
+                            }
+                          })}
                         >
                           {(i + 1).toString().padStart(2, "0")}:00
                         </SelectItem>
@@ -148,11 +246,13 @@ function Page() {
               </div>
             </div>
 
-            <Button className="w-full" asChild>
-              <Link href="/appointments/new" className="flex justify-center">
-                <PlusIcon className="w-5 h-5 mr-2" />
-                Book now {`${date?.toLocaleDateString()} ${hour}:00`}
-              </Link>
+            <Button
+              className="w-full"
+              disabled={!formValid}
+              onClick={handleSubmit}
+            >
+              <PlusIcon className="w-5 h-5 mr-2" />
+              Book now
             </Button>
           </div>
         </div>

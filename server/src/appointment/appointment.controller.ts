@@ -61,6 +61,9 @@ export class AppointmentController {
   })
   @ApiInternalServerErrorResponse({ description: 'Internal server error' })
   async createAppointment(@Body() createAppointmentDto: CreateAppointmentDto) {
-    return this.appointmentService.createAppointment(createAppointmentDto);
+    const appointment = await this.appointmentService.createAppointment(
+      createAppointmentDto,
+    );
+    return appointment;
   }
 }
