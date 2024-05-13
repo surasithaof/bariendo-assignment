@@ -94,7 +94,7 @@ export class AuthService {
     const cacheKey = this.getTokenCacheKey(oldAccressToken, oldRefreshToken);
     const cached = await this.cacheManager.get(cacheKey);
     if (!cached) {
-      console.error('cached not found');
+      console.error('refresh token error: cached not found');
       throw new HttpException('Invalid refresh token', 400);
     }
 
@@ -103,7 +103,7 @@ export class AuthService {
     );
     if (cachedRefreshToken !== oldRefreshToken) {
       console.error(
-        'cachedRefreshToken !== oldRefreshToken',
+        'refresh token error: cachedRefreshToken !== oldRefreshToken',
         cachedRefreshToken,
         oldRefreshToken,
       );
