@@ -5,13 +5,7 @@ import { MigrateDeploy } from '@prisma/migrate';
 @Injectable()
 export class PrismaService extends PrismaClient implements OnModuleInit {
   constructor() {
-    let options = null;
-    if (process.env.DATABASE_DEBUG === 'true') {
-      options = {
-        log: ['query', 'info', 'warn', 'error'],
-      };
-    }
-    super(options);
+    super();
   }
 
   async onModuleInit() {

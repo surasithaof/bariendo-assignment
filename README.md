@@ -39,3 +39,19 @@ I added seed data which are organizations, super admin and organization admin us
 | Org A | Admin | admin@orga.com | P@ssw0rd! |
 | Org B | Admin | admin@orgb.com | P@ssw0rd! |
 | Org C | Admin | admin@orgc.com | P@ssw0rd! |
+
+## Deployment with Docker compose
+
+- Set up `.env` files for server and client like on development _(for `DATABASE_URL` of server need to change `localhost` to be service name which is `postgres`)_
+
+- Start docker compose with this command
+
+  ```sh
+  docker-compose up
+  ```
+
+- For client if you update env configs, it needs to rebuild with command
+
+  ```sh
+  docker-compose build ui --no-cache
+  ```

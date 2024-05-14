@@ -8,7 +8,7 @@ import { signIn, signOut, useSession } from "next-auth/react";
 import { EnterIcon, ExitIcon } from "@radix-ui/react-icons";
 import { useRouter } from "next/navigation";
 import { AppRoute } from "@/lib/constants";
-import { REFRESH_TOKEN_ERROR } from "@/app/api/auth/[...nextauth]/route";
+import { REFRESH_TOKEN_ERROR } from "@/lib/types/auth.type";
 
 export default function NavigationBar() {
   const session = useSession();

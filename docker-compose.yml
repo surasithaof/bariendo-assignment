@@ -1,4 +1,4 @@
-version: "3.7"
+version: "3"
 
 services:
   postgres:
@@ -13,3 +13,33 @@ services:
       TZ: Asia/Bangkok
     volumes:
       - ./data/postgres:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  api:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    container_name: api
+    ports:
+      - "3001:3001"
+    env_file:
+      - ./server/.env
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  ui:
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    container_name: ui
+    ports:
+      - 3000:3000
+    env_file:
+      - ./client/.env
+    depends_on:
+      - api

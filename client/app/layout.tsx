@@ -6,8 +6,8 @@ import { cn } from "@/lib/utils";
 import { ThemeProvider } from "next-themes";
 import NextAuthProvider from "@/lib/context/NextAuthProvider";
 import { getServerSession } from "next-auth";
-import { authOptions } from "./api/auth/[...nextauth]/route";
 import { Toaster } from "@/components/ui/toaster";
+import { authOptions } from "@/lib/auth/authOptions";
 
 const fontSans = FontSans({
   subsets: ["latin"],

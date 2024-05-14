@@ -10,3 +10,5 @@ export interface LoginResponse {
   refreshToken: "string";
   expiresIn: number;
 }
+
+export const REFRESH_TOKEN_ERROR = "RefreshAccessTokenError";
