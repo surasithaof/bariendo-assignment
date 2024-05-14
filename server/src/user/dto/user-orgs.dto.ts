@@ -23,6 +23,9 @@ export class UserOrganizationDto {
   role: $Enums.Role;
 
   @ApiProperty()
+  name: string;
+
+  @ApiProperty()
   createdAt: Date;
 
   @ApiProperty()

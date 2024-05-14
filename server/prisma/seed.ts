@@ -57,16 +57,19 @@ async function main() {
         organizationId: 1,
         userId: 1,
         role: Role.Admin,
+        name: 'Admin Org A',
       },
       {
         organizationId: 2,
         userId: 2,
         role: Role.Admin,
+        name: 'Admin Org B',
       },
       {
         organizationId: 3,
         userId: 3,
         role: Role.Admin,
+        name: 'Admin Org C',
       },
     ],
   });

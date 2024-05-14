@@ -17,6 +17,9 @@ export class UserOrganizationEntity implements UserOrganization {
   role: $Enums.Role;
 
   @ApiProperty()
+  name: string;
+
+  @ApiProperty()
   createdAt: Date;
 
   @ApiProperty()

@@ -9,17 +9,18 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Organization } from "@/lib/types/org.type";
 import { UserOrganization } from "@/lib/types/user.type";
 
 export function UserOrgsSelect({
   orgs,
   selectedOrg,
   onValueChange,
+  disabledSelect,
 }: {
   orgs: UserOrganization[];
   selectedOrg?: UserOrganization;
   onValueChange: (value: string) => void;
+  disabledSelect?: (org: UserOrganization) => boolean;
 }) {
   return (
     <Select
@@ -33,7 +34,11 @@ export function UserOrgsSelect({
         <SelectGroup>
           <SelectLabel>Organizations</SelectLabel>
           {orgs.map((org) => (
-            <SelectItem key={org.id} value={org.id.toString()}>
+            <SelectItem
+              key={org.id}
+              value={org.id.toString()}
+              disabled={disabledSelect && disabledSelect(org)}
+            >
               {org.organization?.name}
             </SelectItem>
           ))}

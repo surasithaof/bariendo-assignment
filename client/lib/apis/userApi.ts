@@ -9,12 +9,14 @@ export const getUserOrgsApi = async (userId: number) => {
 export const createUserOrgsApi = async (
   userId: number,
   orgId: number,
-  role: UserRole
+  role: UserRole,
+  name: string
 ) => {
   return AxiosInstance.post<UserOrganization>(
     `/users/${userId}/orgs/${orgId}`,
     {
       role,
+      name,
     }
   );
 };

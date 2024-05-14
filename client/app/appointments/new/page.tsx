@@ -25,12 +25,15 @@ import {
   getAppointmentsApi,
 } from "@/lib/apis/appointmentApi";
 import { useRouter } from "next/navigation";
+import { UserRole } from "@/lib/types/auth.enum";
+
+// TODO: add validation for form.
 
 function Page() {
   const router = useRouter();
   const [date, setDate] = React.useState<Date | undefined>(new Date());
-  const [hour, setHour] = React.useState<number | undefined>(1);
-  const [period, setPeriod] = React.useState<string | undefined>("AM");
+  const [hour, setHour] = React.useState<number | undefined>();
+  const [period, setPeriod] = React.useState<string | undefined>();
   const [appointmentDate, setAppointmentDate] = React.useState<
     Date | undefined
   >();
@@ -152,6 +155,9 @@ function Page() {
                   orgs={userOrgs}
                   selectedOrg={selectedUserOrg}
                   onValueChange={handleSelectUserOrg}
+                  disabledSelect={(uo) => {
+                    return uo.role === UserRole.Doctor;
+                  }}
                 />
               </div>
               <div className="basis-1/3">

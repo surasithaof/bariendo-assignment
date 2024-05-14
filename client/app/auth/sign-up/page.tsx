@@ -18,11 +18,10 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { set, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { Checkbox } from "@/components/ui/checkbox";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { registerApi } from "@/lib/apis/authApi";
 import { RegisterPayload } from "@/lib/types/auth.type";
 import { signIn, useSession } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -36,9 +35,14 @@ const formSchema = z
     email: z.string().email(),
     password: z.string().min(8),
     confirmPassword: z.string().min(8),
-    acceptTerms: z.boolean().refine((value) => value === true, {
-      message: "Please accept the terms",
-    }),
+    // acceptTerms: z.boolean().refine((value) => value === true, {
+    // message: "Please accept the terms",
+    // }),
+    acceptTerms: z
+      .array(z.string())
+      .refine((value) => value.some((item) => item), {
+        message: "Please accept the terms",
+      }),
   })
   .refine((data) => data.password === data.confirmPassword, {
     message: "Passwords don't match",
@@ -66,7 +70,7 @@ function Page() {
       email: "",
       password: "",
       confirmPassword: "",
-      acceptTerms: false,
+      acceptTerms: [],
     },
   });
   const { reset } = form;
@@ -177,7 +181,16 @@ function Page() {
                           <FormControl>
                             <Checkbox
                               {...field}
-                              onCheckedChange={field.onChange}
+                              checked={field.value?.includes("accepted")}
+                              onCheckedChange={(checked) => {
+                                return checked
+                                  ? field.onChange([...field.value, "accepted"])
+                                  : field.onChange(
+                                      field.value?.filter(
+                                        (value) => value !== "accepted"
+                                      )
+                                    );
+                              }}
                             />
                           </FormControl>
                           <FormLabel htmlFor="terms">

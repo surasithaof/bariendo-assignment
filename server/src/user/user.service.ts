@@ -137,6 +137,7 @@ export class UserService {
           },
         },
         role: true,
+        name: true,
         createdAt: true,
         updatedAt: true,
       },
@@ -181,6 +182,7 @@ export class UserService {
         userId: userId,
         organizationId: orgId,
         role: createUserOrgDto.role,
+        name: createUserOrgDto.name,
       },
     });
 

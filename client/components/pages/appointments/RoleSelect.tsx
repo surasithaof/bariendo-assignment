@@ -28,7 +28,7 @@ export function RoleSelect({
       </SelectTrigger>
       <SelectContent>
         <SelectGroup>
-          <SelectLabel>Organizations</SelectLabel>
+          <SelectLabel>Role</SelectLabel>
           <SelectItem key={UserRole.Doctor} value={UserRole.Doctor}>
             {UserRole.Doctor}
           </SelectItem>

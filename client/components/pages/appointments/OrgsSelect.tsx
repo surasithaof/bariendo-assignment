@@ -13,18 +13,18 @@ import { Organization } from "@/lib/types/org.type";
 
 export function OrgsSelect({
   orgs,
-  selectedOrg,
+  defaultValue,
   onValueChange,
   disabledSelect,
 }: {
   orgs: Organization[];
-  selectedOrg?: Organization;
+  defaultValue?: number;
   onValueChange: (value: string) => void;
   disabledSelect?: (org: Organization) => boolean;
 }) {
   return (
     <Select
-      value={selectedOrg?.id.toString()}
+      value={orgs.find((org) => org.id === defaultValue)?.id.toString()}
       onValueChange={(value) => onValueChange(value)}
     >
       <SelectTrigger>

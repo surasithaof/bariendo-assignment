@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { UserOrganizationDto } from './user-orgs.dto';
 
 export class DoctorDto {
   @ApiProperty()
@@ -6,6 +7,9 @@ export class DoctorDto {
 
   @ApiProperty()
   userOrganizationId: number;
+
+  @ApiProperty()
+  userOrganization?: UserOrganizationDto;
 
   @ApiProperty()
   createdAt: Date;
