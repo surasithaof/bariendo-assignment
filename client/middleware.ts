@@ -18,7 +18,6 @@ export async function middleware(request: NextRequest) {
 
   const matchesProtectedPath = pathMatch(AllProtectRoutes, pathname);
   if (matchesProtectedPath) {
-    console.log("match middleware:", matchesProtectedPath, pathname);
     const token = await getToken({ req: request });
     const jwtUser = token;
 

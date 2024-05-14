@@ -15,7 +15,7 @@ import {
   SelectLabel,
   SelectItem,
 } from "@/components/ui/select";
-import { PlusIcon } from "lucide-react";
+import { ArrowLeftIcon, PlusIcon } from "lucide-react";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import React from "react";
@@ -32,10 +32,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
-  FormLabel,
   FormMessage,
 } from "@/components/ui/form";
 import HourSelect from "@/components/pages/appointments/HourSelect";
@@ -61,7 +59,7 @@ function Page() {
 
   const form = useForm<FormSchemaType>({
     resolver: zodResolver(formSchema),
-    mode: "onTouched",
+    mode: "all",
     defaultValues: {
       userOrgId: "",
       doctorId: "",
@@ -70,17 +68,19 @@ function Page() {
       period: "",
     },
   });
-  const { watch, reset } = form;
+  const { watch } = form;
   const [userOrgId, date] = watch(["userOrgId", "date"]);
 
   const [userOrgs, setUserOrgs] = React.useState<UserOrganization[]>([]);
 
   React.useEffect(() => {
     const fetchOrgs = async () => {
-      if (session.data?.user.id) {
+      if (session?.data?.user?.id) {
         const userId = session.data?.user.id;
         const { data: userOrgs } = await getUserOrgsApi(parseInt(userId));
         setUserOrgs(userOrgs);
+      } else {
+        setUserOrgs([]);
       }
     };
     fetchOrgs();
@@ -91,7 +91,6 @@ function Page() {
       const org = userOrgs.find((uo) => uo.id.toString() === userOrgId);
       if (userOrgId && org) {
         const resp = await getDoctorsApi(org.organizationId);
-        console.log(resp.data);
         setDoctors(resp.data);
       } else {
         setDoctors([]);
@@ -124,8 +123,7 @@ function Page() {
           startDate,
           endDate
         );
-        const booked = resp.data.data.map((a) => new Date(a.date));
-        console.log(booked);
+        const booked = resp.data.map((a) => new Date(a.date));
         setBookedAppointments(booked);
       } else {
         setBookedAppointments([]);
@@ -142,7 +140,6 @@ function Page() {
   const [formError, setFormError] = React.useState<string | null>(null);
 
   const onSubmit = async (data: FormSchemaType) => {
-    console.log(data);
     const org = userOrgs.find((uo) => uo.id.toString() === data.userOrgId);
     if (!org) {
       return;
@@ -329,6 +326,19 @@ function Page() {
                                   return true;
                                 }
 
+                                const now = new Date();
+                                const today = new Date(
+                                  now.getFullYear(),
+                                  now.getMonth(),
+                                  now.getDate()
+                                );
+                                if (
+                                  date.getTime() === today.getTime() &&
+                                  hour < now.getHours()
+                                ) {
+                                  return true;
+                                }
+
                                 return bookedAppointments.some((a) => {
                                   if (a.getHours() > 12) {
                                     return (
@@ -376,16 +386,36 @@ function Page() {
                   </div>
                 )}
 
-                <Button
-                  className="w-full"
-                  disabled={
-                    !form.formState.isValid || form.formState.isSubmitting
-                  }
-                  type="submit"
-                >
-                  <PlusIcon className="w-5 h-5 mr-2" />
-                  Book now
-                </Button>
+                <div className="space-y-2">
+                  <Button
+                    className="w-full"
+                    disabled={
+                      !form.formState.isValid || form.formState.isSubmitting
+                    }
+                    type="submit"
+                  >
+                    <PlusIcon className="w-5 h-5 mr-2" />
+                    Book now
+                  </Button>
+
+                  <Button
+                    className="w-full"
+                    disabled={
+                      !form.formState.isValid || form.formState.isSubmitting
+                    }
+                    asChild
+                    type="button"
+                    variant={"outline"}
+                  >
+                    <Link
+                      href={AppRoute.Appointment.Base}
+                      className="flex justify-center"
+                    >
+                      <ArrowLeftIcon className="w-5 h-5 mr-2" />
+                      Back
+                    </Link>
+                  </Button>
+                </div>
               </div>
             </form>
           </Form>

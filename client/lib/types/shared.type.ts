@@ -13,13 +13,6 @@ export interface APIErrorResponse {
   message: string;
 }
 
-export interface Paging<TData> {
-  page: number;
-  limit: number;
-  total: number;
-  data: TData[];
-}
-
 export interface Audiable {
   createdAt: Date;
   updatedAt: Date;

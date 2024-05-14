@@ -11,12 +11,12 @@ export class GetAppointmentsQuery {
   @ApiProperty({ required: false })
   @IsOptional()
   @Type(() => Number)
-  skip?: number;
+  patientUserId?: number;
 
   @ApiProperty({ required: false })
   @IsOptional()
   @Type(() => Number)
-  limit?: number;
+  doctorUserId?: number;
 
   @ApiProperty({ required: false })
   @IsOptional()

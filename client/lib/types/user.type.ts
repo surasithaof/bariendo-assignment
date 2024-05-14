@@ -1,5 +1,7 @@
 import { UserRole } from "./auth.enum";
+import { Doctor } from "./doctor.type";
 import { Organization } from "./org.type";
+import { Patient } from "./patient.type";
 
 export interface User {
   id: number;
@@ -16,14 +18,8 @@ export interface UserOrganization {
   organization?: Organization;
   name: string;
   role: UserRole;
-  patient?: {
-    id: number;
-    userOrganizationId: number;
-  };
-  doctor?: {
-    id: number;
-    userOrganizationId: number;
-  };
+  patient?: Patient;
+  doctor?: Doctor;
   updatedAt: string;
   createdAt: string;
 }

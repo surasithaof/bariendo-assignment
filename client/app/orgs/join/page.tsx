@@ -4,13 +4,6 @@ import { OrgsSelect } from "@/components/pages/appointments/OrgsSelect";
 import { RoleSelect } from "@/components/pages/appointments/RoleSelect";
 import { Button } from "@/components/ui/button";
 import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardContent,
-  CardFooter,
-} from "@/components/ui/card";
-import {
   Form,
   FormControl,
   FormField,
@@ -83,7 +76,6 @@ function Page() {
   }, [session.data]);
 
   const onSubmit = async (data: FormSchemaType) => {
-    console.log(data);
     const userId = session.data?.user.id;
     if (!userId) {
       signOut();
@@ -117,84 +109,98 @@ function Page() {
 
   return (
     <ContentWrapper>
-      <div className="w-fit mx-auto my-20">
-        <Card className="w-[350px]">
+      <div className="flex flex-col gap-y-2">
+        <div className="flex justify-between">
+          <h1 className="text-xl font-semibold">Join organization</h1>
+        </div>
+        <div className="w-[350px] mx-auto">
           <Form {...form}>
             <form
               onSubmit={form.handleSubmit(onSubmit)}
               onFocus={() => setFormError(null)}
+              className="space-y-4"
             >
-              <CardHeader>
-                <CardTitle>Join organization</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  <FormField
-                    control={form.control}
-                    name="organizationId"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Organization</FormLabel>
-                        <FormControl>
-                          <OrgsSelect
-                            orgs={orgs}
-                            defaultValue={parseInt(field.value)}
-                            onValueChange={field.onChange}
-                            disabledSelect={(org) =>
-                              !!userOrgs.find(
-                                (userOrg) => userOrg.organizationId === org.id
-                              )
-                            }
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-
-                  <FormField
-                    control={form.control}
-                    name="role"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Role</FormLabel>
-                        <FormControl>
-                          <RoleSelect
-                            selectedRole={field.value as UserRole}
-                            onValueChange={field.onChange}
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-
-                  <FormField
-                    control={form.control}
-                    name="name"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Name</FormLabel>
-                        <FormControl>
-                          <Input
-                            placeholder="Enter your name"
-                            {...field}
-                            type="text"
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-
-                  {formError && (
-                    <div className="flex flex-col space-y-1. text-sm text-destructive text-center">
-                      <span>{formError}</span>
-                    </div>
+              <div className="space-y-4">
+                <FormField
+                  control={form.control}
+                  name="organizationId"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Organization</FormLabel>
+                      <FormControl>
+                        <OrgsSelect
+                          orgs={orgs}
+                          defaultValue={parseInt(field.value)}
+                          onValueChange={field.onChange}
+                          disabledSelect={(org) =>
+                            !!userOrgs.find(
+                              (userOrg) => userOrg.organizationId === org.id
+                            )
+                          }
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
                   )}
-                </div>
-              </CardContent>
-              <CardFooter className="flex justify-between gap-2">
+                />
+
+                <FormField
+                  control={form.control}
+                  name="role"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Role</FormLabel>
+                      <FormControl>
+                        <RoleSelect
+                          selectedRole={field.value as UserRole}
+                          onValueChange={field.onChange}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="name"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Name</FormLabel>
+                      <FormControl>
+                        <Input
+                          placeholder="Enter your name"
+                          {...field}
+                          type="text"
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                {formError && (
+                  <div className="flex flex-col space-y-1. text-sm text-destructive text-center">
+                    <span>{formError}</span>
+                  </div>
+                )}
+              </div>
+
+              <div className="space-y-2">
+                <Button
+                  type="submit"
+                  className="w-full"
+                  variant="default"
+                  disabled={
+                    !form.formState.isValid ||
+                    form.formState.isSubmitting ||
+                    fetching
+                  }
+                >
+                  <HomeIcon className="w-5 h-5 mr-2" />
+                  Join
+                </Button>
+
                 <Button
                   className="w-full"
                   disabled={
@@ -214,24 +220,10 @@ function Page() {
                     Back
                   </Link>
                 </Button>
-
-                <Button
-                  type="submit"
-                  className="w-full"
-                  variant="default"
-                  disabled={
-                    !form.formState.isValid ||
-                    form.formState.isSubmitting ||
-                    fetching
-                  }
-                >
-                  <HomeIcon className="w-5 h-5 mr-2" />
-                  Join
-                </Button>
-              </CardFooter>
+              </div>
             </form>
           </Form>
-        </Card>
+        </div>
       </div>
     </ContentWrapper>
   );

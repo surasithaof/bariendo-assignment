@@ -1,14 +1,29 @@
 import AxiosInstance from "../axios/AxiosInstanceClient";
 import { Appointment } from "../types/appointments.type";
-import { Paging } from "../types/shared.type";
 
 export const getAppointmentsApi = async (
-  orgId: number,
-  startDate: Date,
-  endDate: Date
+  orgId?: number,
+  startDate?: Date,
+  endDate?: Date,
+  patientUserId?: number,
+  doctorUserId?: number
 ) => {
-  const url = `/appointments?orgId=${orgId}&startDate=${startDate.toISOString()}&endDate=${endDate.toISOString()}`;
-  return AxiosInstance.get<Paging<Appointment>>(url);
+  let url = `/appointments`;
+  return AxiosInstance.get<Appointment[]>(url, {
+    params: {
+      orgId,
+      startDate,
+      endDate,
+      patientUserId,
+      doctorUserId,
+    },
+  });
+};
+
+export const getAppointmentByIdApi = async (appointmentId: number) => {
+  let url = `/appointments/${appointmentId}`;
+
+  return AxiosInstance.get<Appointment>(url);
 };
 
 export const createAppointmentApi = async (

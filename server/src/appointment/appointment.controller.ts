@@ -22,7 +22,6 @@ import { AppointmentService } from './appointment.service';
 import { AppointmentEntity } from './entities/appointment.entity';
 import { CreateAppointmentDto } from './dto/create-appointment.dto';
 import { GetAppointmentsQuery } from './dto/get-appointment.dto';
-import { ApiOkResponsePaginated } from 'src/shared/dto/ok-paginated.dto';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 
 @Controller('appointments')
@@ -36,14 +35,14 @@ export class AppointmentController {
   }
 
   @Get()
-  @ApiOkResponsePaginated(AppointmentEntity)
+  @ApiOkResponse({ description: 'Appointment list', type: [AppointmentEntity] })
   @ApiInternalServerErrorResponse({ description: 'Internal server error' })
   async getAppointments(@Query() queryParams: GetAppointmentsQuery) {
     return this.appointmentService.getAppointments(queryParams);
   }
 
   @Get(':id')
-  @ApiOkResponse({ description: 'Appointment list', type: AppointmentEntity })
+  @ApiOkResponse({ description: 'Appointment', type: AppointmentEntity })
   @ApiNotFoundResponse({ description: 'Appointment not found' })
   @ApiInternalServerErrorResponse({ description: 'Internal server error' })
   async getAppointmentById(@Param('id', ParseIntPipe) id: number) {
