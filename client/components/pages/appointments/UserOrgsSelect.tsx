@@ -12,19 +12,19 @@ import {
 import { UserOrganization } from "@/lib/types/user.type";
 
 export function UserOrgsSelect({
-  orgs,
-  selectedOrg,
+  userOrgs,
+  defaultValue,
   onValueChange,
   disabledSelect,
 }: {
-  orgs: UserOrganization[];
-  selectedOrg?: UserOrganization;
+  userOrgs: UserOrganization[];
+  defaultValue?: number;
   onValueChange: (value: string) => void;
   disabledSelect?: (org: UserOrganization) => boolean;
 }) {
   return (
     <Select
-      value={selectedOrg?.id.toString()}
+      value={userOrgs.find((org) => org.id === defaultValue)?.id.toString()}
       onValueChange={(value) => onValueChange(value)}
     >
       <SelectTrigger>
@@ -33,13 +33,13 @@ export function UserOrgsSelect({
       <SelectContent>
         <SelectGroup>
           <SelectLabel>Organizations</SelectLabel>
-          {orgs.map((org) => (
+          {userOrgs.map((uo) => (
             <SelectItem
-              key={org.id}
-              value={org.id.toString()}
-              disabled={disabledSelect && disabledSelect(org)}
+              key={uo.id}
+              value={uo.id.toString()}
+              disabled={disabledSelect && disabledSelect(uo)}
             >
-              {org.organization?.name}
+              {uo.organization?.name}
             </SelectItem>
           ))}
         </SelectGroup>

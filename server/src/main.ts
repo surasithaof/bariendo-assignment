@@ -22,7 +22,11 @@ async function bootstrap() {
     .addBearerAuth()
     .build();
   const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup(httPrefix + '/swagger', app, document);
+  SwaggerModule.setup(httPrefix + '/swagger', app, document, {
+    swaggerOptions: {
+      persistAuthorization: true,
+    },
+  });
 
   app.enableCors();
 

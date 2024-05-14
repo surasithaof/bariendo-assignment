@@ -14,7 +14,16 @@ export interface UserOrganization {
   user?: User;
   organizationId: number;
   organization?: Organization;
+  name: string;
   role: UserRole;
+  patient?: {
+    id: number;
+    userOrganizationId: number;
+  };
+  doctor?: {
+    id: number;
+    userOrganizationId: number;
+  };
   updatedAt: string;
   createdAt: string;
 }

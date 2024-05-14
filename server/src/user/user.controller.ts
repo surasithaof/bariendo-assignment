@@ -67,6 +67,20 @@ export class UserController {
 
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
+  @Get(':userId/orgs/:orgId')
+  @ApiOkResponse({ description: 'Users list', type: [UserOrganizationEntity] })
+  @ApiNotFoundResponse({ description: 'User not found' })
+  @ApiInternalServerErrorResponse({ description: 'Internal server error' })
+  async getUserOrgById(
+    @Param('userId', ParseIntPipe) userId: number,
+    @Param('orgId', ParseIntPipe) orgId: number,
+  ) {
+    const userOrg = await this.userService.getUserOrgsById(userId, orgId);
+    return userOrg;
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
   @Post(':userId/orgs/:orgId')
   @ApiOkResponse({ description: 'Users list', type: [UserOrganizationEntity] })
   @ApiNotFoundResponse({ description: 'User not found' })

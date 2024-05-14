@@ -115,6 +115,51 @@ export class UserService {
       where: {
         userId: userId,
       },
+      orderBy: {
+        organization: {
+          name: 'asc',
+        },
+      },
+      select: {
+        id: true,
+        userId: true,
+        organization: {
+          select: {
+            id: true,
+            name: true,
+            createdAt: true,
+            updatedAt: true,
+          },
+        },
+        organizationId: true,
+        user: {
+          select: {
+            id: true,
+            email: true,
+            isSuperAdmin: true,
+            createdAt: true,
+            updatedAt: true,
+          },
+        },
+        role: true,
+        name: true,
+        patient: true,
+        doctor: true,
+        createdAt: true,
+        updatedAt: true,
+      },
+    });
+  }
+
+  async getUserOrgsById(
+    userId: number,
+    orgId: number,
+  ): Promise<UserOrganizationDto> {
+    const userOrg = await this.prisma.userOrganization.findFirst({
+      where: {
+        userId: userId,
+        organizationId: orgId,
+      },
       select: {
         id: true,
         userId: true,
@@ -142,6 +187,10 @@ export class UserService {
         updatedAt: true,
       },
     });
+    if (!userOrg) {
+      return null;
+    }
+    return userOrg;
   }
 
   async createUserOrg(

@@ -1,10 +1,20 @@
-import { Body, Controller, HttpCode, Post } from '@nestjs/common';
-import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
+import {
+  Body,
+  Controller,
+  Get,
+  HttpCode,
+  Post,
+  Request,
+  UseGuards,
+} from '@nestjs/common';
+import { ApiBearerAuth, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { SignInDto } from './dto/sign-in.dto';
 import { AuthService } from './auth.service';
 import { SignUpDto } from './dto/sign-up';
 import { AuthDto } from './dto/auth.dto';
 import { RefreshTokenDto } from './dto/refresh.dto';
+import { JwtAuthGuard } from './jwt-auth.guard';
+import { UserDto } from 'src/user/dto/user.dto';
 
 @Controller('auth')
 @ApiTags('auth')
@@ -36,5 +46,14 @@ export class AuthController {
       refreshTokenDto.accessToken,
       refreshTokenDto.refreshToken,
     );
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
+  @Get('profile')
+  @ApiOkResponse({ description: 'Get user info', type: UserDto })
+  @HttpCode(200)
+  async getProfile(@Request() req: any) {
+    return this.authService.getProfile(req.user.id as number);
   }
 }

@@ -38,7 +38,6 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 const formSchema = z.object({
-  // organizationId: z.number().int().positive("Please select an organization"),
   organizationId: z.string().min(1, "Please select an organization"),
   role: z.string().min(1, "Please select a role"),
   name: z.string().min(1, "Please enter your name"),

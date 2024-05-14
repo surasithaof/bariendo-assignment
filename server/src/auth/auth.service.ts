@@ -134,6 +134,10 @@ export class AuthService {
     };
   }
 
+  async getProfile(userId: number): Promise<UserDto> {
+    return this.userService.getUserById(userId);
+  }
+
   generateAccessToken(user: UserDto): {
     accessToken: string;
     expiresIn: number;

@@ -9,7 +9,9 @@ export class DoctorService {
   async getDoctors(orgId: number): Promise<DoctorDto[]> {
     return this.prisma.doctor.findMany({
       where: {
-        userOrganizationId: orgId,
+        userOrganization: {
+          organizationId: orgId,
+        },
       },
       include: {
         userOrganization: true,
