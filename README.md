@@ -1,6 +1,6 @@
 # Bariendo assignment
 
-This is a Bariendo's assignment to create a full stack web application to create doctor's appointments.
+This is a Bariendo's assignment to create a full stack web application to create doctor's appointments. [read more](./Assignment.md)
 
 ## Setup for development
 
