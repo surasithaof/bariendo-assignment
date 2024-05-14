@@ -14,12 +14,10 @@ import { UserRole } from "./lib/types/auth.enum";
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
-  console.log("middleware:", pathname);
 
   const matchesProtectedPath = pathMatch(AllProtectRoutes, pathname);
   if (matchesProtectedPath) {
     const token = await getToken({ req: request });
-    const jwtUser = token;
 
     if (!token) {
       const url = new URL(AppRoute.Auth.SignIn, request.url);
@@ -28,24 +26,24 @@ export async function middleware(request: NextRequest) {
     }
 
     // TODO: server side should sign organization and role in token.
-    // console.log(jwtUser?.user);
+    // console.log(token?.user);
     // if (
-    //   hasRole(jwtUser?.user?.role, UserRole.Patient) &&
+    //   hasRole(token?.user?.role, UserRole.Patient) &&
     //   pathMatch(PatientProtectRoutes, pathname)
     // ) {
     //   return NextResponse.next();
     // } else if (
-    //   hasRole(jwtUser?.user?.role, UserRole.Doctor) &&
+    //   hasRole(token?.user?.role, UserRole.Doctor) &&
     //   pathMatch(DoctorProtectRoutes, pathname)
     // ) {
     //   return NextResponse.next();
     // } else if (
-    //   hasRole(jwtUser?.user?.role, UserRole.Admin) &&
+    //   hasRole(token?.user?.role, UserRole.Admin) &&
     //   pathMatch(AdminProtectRoutes, pathname)
     // ) {
     //   return NextResponse.next();
     // } else if (
-    //   hasRole(jwtUser?.user?.role, UserRole.SuperAdmin) &&
+    //   hasRole(token?.user?.role, UserRole.SuperAdmin) &&
     //   pathMatch(SuperAdminProtectRoutes, pathname)
     // ) {
     //   return NextResponse.next();
