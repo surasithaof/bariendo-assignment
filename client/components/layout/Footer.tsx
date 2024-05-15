@@ -1,6 +1,7 @@
 import AppIcon from "@/components/shared/AppIcon";
 import Link from "next/link";
 import React from "react";
+import { Button } from "../ui/button";
 
 export default function Footer() {
   return (
@@ -15,8 +16,12 @@ export default function Footer() {
 
           <div className="flex flex-col gap-y-2">
             <h2 className="text-md font-bold text-muted-foreground">Legal</h2>
-            <Link href="/privacy">Privacy Policy</Link>
-            <Link href="/terms">Terms of Service</Link>
+            <Link href="/privacy" className="text-sm">
+              Privacy Policy
+            </Link>
+            <Link href="/terms" className="text-sm">
+              Terms of Service
+            </Link>
           </div>
         </div>
 
