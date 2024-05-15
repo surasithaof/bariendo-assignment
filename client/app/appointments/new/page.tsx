@@ -118,11 +118,11 @@ function Page() {
           59
         );
 
-        const resp = await getAppointmentsApi(
-          org.organizationId,
+        const resp = await getAppointmentsApi({
+          orgId: org.organizationId,
           startDate,
-          endDate
-        );
+          endDate,
+        });
         const booked = resp.data.map((a) => new Date(a.date));
         setBookedAppointments(booked);
       } else {
@@ -332,9 +332,19 @@ function Page() {
                                   now.getMonth(),
                                   now.getDate()
                                 );
+
                                 if (
+                                  period === "AM" &&
                                   date.getTime() === today.getTime() &&
-                                  hour < now.getHours()
+                                  hour < now.getHours() + 1
+                                ) {
+                                  return true;
+                                }
+
+                                if (
+                                  period === "PM" &&
+                                  date.getTime() === today.getTime() &&
+                                  hour < now.getHours() + 1 - 12
                                 ) {
                                   return true;
                                 }

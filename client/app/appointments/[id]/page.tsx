@@ -11,6 +11,7 @@ import {
   CalendarIcon,
   ClockIcon,
   HomeIcon,
+  PersonIcon,
 } from "@radix-ui/react-icons";
 import Link from "next/link";
 import React from "react";
@@ -30,7 +31,11 @@ function Page({ params }: { params: { id: string } }) {
   return (
     <ContentWrapper>
       <div className="flex flex-col gap-y-2">
-        <div className="flex flex-col py-4">
+        <span className="font-semibold text-xl">
+          Booked Appointment Details
+        </span>
+
+        <div className="flex flex-col gap-4 py-4 w-full mx-auto rounded-md border p-4 shadow-sm">
           {!appointment && (
             <div className="flex flex-col gap-y-4 w-full">
               <Skeleton className="h-6 w-full rounded-xl" />
@@ -41,19 +46,32 @@ function Page({ params }: { params: { id: string } }) {
           )}
           {appointment && (
             <div className="flex flex-col gap-y-4 w-full">
-              <span className="font-semibold text-xl">
+              <span className="flex flex-start text-md">
+                <span className="flex flex-start font-semibold mr-2">
+                  <PersonIcon className="w-6 h-6 mr-2" />
+                  Doctor:
+                </span>
                 {appointment.doctor?.userOrganization?.name}
               </span>
-              <span className="flex flex-start text-xl">
-                <HomeIcon className="w-6 h-6 mr-2" />
+              <span className="flex flex-start text-md">
+                <span className="flex flex-start font-semibold mr-2">
+                  <HomeIcon className="w-6 h-6 mr-2" />
+                  Organization:
+                </span>{" "}
                 {appointment.organization.name}
               </span>
-              <span className="flex flex-start text-xl">
-                <CalendarIcon className="w-6 h-6 mr-2" />
+              <span className="flex flex-start text-md">
+                <span className="flex flex-start font-semibold mr-2">
+                  <CalendarIcon className="w-6 h-6 mr-2" />
+                  Date:
+                </span>{" "}
                 {parseDate(appointment.date)}
               </span>
-              <span className="flex flex-start text-xl">
-                <ClockIcon className="w-6 h-6 mr-2" />
+              <span className="flex flex-start text-md">
+                <span className="flex flex-start font-semibold mr-2">
+                  <ClockIcon className="w-6 h-6 mr-2" />
+                  Time:
+                </span>{" "}
                 {parseTime(appointment.date)}
               </span>
             </div>

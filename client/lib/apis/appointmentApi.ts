@@ -1,22 +1,18 @@
 import AxiosInstance from "../axios/AxiosInstanceClient";
 import { Appointment } from "../types/appointments.type";
 
-export const getAppointmentsApi = async (
-  orgId?: number,
-  startDate?: Date,
-  endDate?: Date,
-  patientUserId?: number,
-  doctorUserId?: number
-) => {
+export interface GetAppointmentsPayload {
+  orgId?: number;
+  startDate?: Date;
+  endDate?: Date;
+  patientUserId?: number;
+  doctorUserId?: number;
+}
+
+export const getAppointmentsApi = async (payload: GetAppointmentsPayload) => {
   let url = `/appointments`;
   return AxiosInstance.get<Appointment[]>(url, {
-    params: {
-      orgId,
-      startDate,
-      endDate,
-      patientUserId,
-      doctorUserId,
-    },
+    params: payload,
   });
 };
 

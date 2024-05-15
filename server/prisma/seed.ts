@@ -55,19 +55,19 @@ async function main() {
     data: [
       {
         organizationId: 1,
-        userId: 1,
+        userId: 2,
         role: Role.Admin,
         name: 'Admin Org A',
       },
       {
         organizationId: 2,
-        userId: 2,
+        userId: 3,
         role: Role.Admin,
         name: 'Admin Org B',
       },
       {
         organizationId: 3,
-        userId: 3,
+        userId: 4,
         role: Role.Admin,
         name: 'Admin Org C',
       },

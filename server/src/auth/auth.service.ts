@@ -4,18 +4,17 @@ import { SignUpDto } from './dto/sign-up';
 import { AuthDto } from './dto/auth.dto';
 import { UserService } from 'src/user/user.service';
 import { generateSalt, hashPassword } from 'src/utils/cryptography';
-import { OrgService } from 'src/org/org.service';
 import { JwtService } from '@nestjs/jwt';
 import { v4 as uuid } from 'uuid';
 import { CACHE_MANAGER, Cache } from '@nestjs/cache-manager';
 import { UserDto } from 'src/user/dto/user.dto';
+import { Role } from '@prisma/client';
 
 @Injectable()
 export class AuthService {
   constructor(
     @Inject(CACHE_MANAGER) private cacheManager: Cache,
     private userService: UserService,
-    private orgService: OrgService,
     private jwtService: JwtService,
   ) {}
 
@@ -37,7 +36,7 @@ export class AuthService {
     });
 
     const { accessToken, expiresIn: accessTokenExpire } =
-      this.generateAccessToken(newUser);
+      this.generateAccessToken(newUser, 'user');
     const { refreshToken, expiresIn: refeshTokenExpire } =
       this.generateRefreshToken(newUser);
 
@@ -67,8 +66,24 @@ export class AuthService {
       throw new HttpException('Invalid credentials', 400);
     }
 
+    let userRole: string | string[] = 'user';
+    if (user.isSuperAdmin) {
+      userRole = Role.SuperAdmin;
+    } else {
+      const org = await this.userService.getUserOrgsByUserId(user.id);
+      if (!org) {
+        userRole = 'user';
+      }
+
+      if (org.length === 1) {
+        userRole = `${org[0].role}:${org[0].organizationId}`;
+      } else {
+        userRole = org.map((o) => `${o.role}:${o.organizationId}`);
+      }
+    }
+
     const { accessToken, expiresIn: accessTokenExpire } =
-      this.generateAccessToken(user);
+      this.generateAccessToken(user, userRole);
     const { refreshToken, expiresIn: refeshTokenExpire } =
       this.generateRefreshToken(user);
 
@@ -114,8 +129,19 @@ export class AuthService {
     if (!user) {
       throw new HttpException('User not found', 400);
     }
+
+    let userRole: string | string[] = 'user';
+    if (user.isSuperAdmin) {
+      userRole = Role.SuperAdmin;
+    } else {
+      const org = await this.userService.getUserOrgsByUserId(user.id);
+      if (org) {
+        userRole = org.map((o) => `${o.role}:${o.organizationId}`);
+      }
+    }
+
     const { accessToken, expiresIn: accessTokenExpire } =
-      this.generateAccessToken(user);
+      this.generateAccessToken(user, userRole);
     const { refreshToken: newRefreshToken, expiresIn: refeshTokenExpire } =
       this.generateRefreshToken(user);
 
@@ -138,7 +164,10 @@ export class AuthService {
     return this.userService.getUserById(userId);
   }
 
-  generateAccessToken(user: UserDto): {
+  generateAccessToken(
+    user: UserDto,
+    role: string | string[],
+  ): {
     accessToken: string;
     expiresIn: number;
   } {
@@ -147,6 +176,7 @@ export class AuthService {
         sub: user.id,
         userId: user.id,
         email: user.email,
+        role: role,
       },
       {
         secret: process.env.ACCESS_TOKEN_SECRET,
