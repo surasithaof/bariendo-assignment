@@ -3,9 +3,9 @@ import { generateSalt, hashPassword } from '../src/utils/cryptography';
 const prisma = new PrismaClient();
 
 async function main() {
-  const SUPERADMIN_INITIAL_PASSWORD = 'P@ssw0rd!';
   const salt = await generateSalt();
-  const hashedPassword = await hashPassword(SUPERADMIN_INITIAL_PASSWORD, salt);
+  const adminPassword = await hashPassword('P@ssw0rd!', salt);
+  const userPassword = await hashPassword('password', salt);
 
   await prisma.organization.createMany({
     data: [
@@ -25,32 +25,43 @@ async function main() {
     data: [
       {
         email: 'superadmin@bariendo.com',
-        password: hashedPassword,
+        password: adminPassword,
         salt: salt,
         isSuperAdmin: true,
       },
       {
         email: 'admin@orga.com',
-        password: hashedPassword,
+        password: adminPassword,
         salt: salt,
         isSuperAdmin: false,
       },
       {
         email: 'admin@orgb.com',
-        password: hashedPassword,
+        password: adminPassword,
         salt: salt,
         isSuperAdmin: false,
       },
       {
         email: 'admin@orgc.com',
-        password: hashedPassword,
+        password: adminPassword,
+        salt: salt,
+        isSuperAdmin: false,
+      },
+      {
+        email: 'usera@orga.com',
+        password: userPassword,
+        salt: salt,
+        isSuperAdmin: false,
+      },
+      {
+        email: 'userb@orga.com',
+        password: userPassword,
         salt: salt,
         isSuperAdmin: false,
       },
     ],
   });
 
-  // await
   await prisma.userOrganization.createMany({
     data: [
       {
@@ -70,6 +81,34 @@ async function main() {
         userId: 4,
         role: Role.Admin,
         name: 'Admin Org C',
+      },
+      {
+        organizationId: 1,
+        userId: 5,
+        role: Role.Patient,
+        name: 'User A',
+      },
+      {
+        organizationId: 1,
+        userId: 6,
+        role: Role.Doctor,
+        name: 'Dr. B',
+      },
+    ],
+  });
+
+  await prisma.patient.createMany({
+    data: [
+      {
+        userOrganizationId: 4,
+      },
+    ],
+  });
+
+  await prisma.doctor.createMany({
+    data: [
+      {
+        userOrganizationId: 5,
       },
     ],
   });

@@ -32,13 +32,15 @@ Go to [/client](/client)
 
 ## Seed data
 
-I added seed data which are organizations, super admin and organization admin users as below.
+I added seed data which are organizations, super admin and organization admin and users for testing as below.
 | orgs | role | email | password |
 |-------|------------|-------------------------|-----------|
 | - | SuperAdmin | superadmin@bariendo.com | P@ssw0rd! |
 | Org A | Admin | admin@orga.com | P@ssw0rd! |
 | Org B | Admin | admin@orgb.com | P@ssw0rd! |
 | Org C | Admin | admin@orgc.com | P@ssw0rd! |
+| Org A | Patient | usera@orga.com | password |
+| Org A | Doctor | userb@orga.com | password |
 
 ## Deployment with Docker compose
 
